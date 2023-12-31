@@ -5,7 +5,7 @@ export function BotonPeticion(props) {
 
   const handleClick = async () => {
     const datos = props.onClick();
-    console.log(datos);
+
     setCargando(true);
     try {
       const respuesta = await fetch("http://localhost:3001/clases", {
@@ -30,7 +30,7 @@ export function BotonPeticion(props) {
   return (
     <div>
       <button
-        className="btn-crear"
+        className="btn-peticion"
         disabled={isCargando}
         onClick={!isCargando ? handleClick : null}>
         {isCargando ? "Procesando..." : `${props.texto}`}
@@ -41,8 +41,18 @@ export function BotonPeticion(props) {
 
 export function BotonCancelar(props) {
   return (
+    <div style={{ width: "100%" }}>
+      <button type="button" className="btn-cancelar" onClick={props.onClick}>
+        {props.texto}
+      </button>
+    </div>
+  );
+}
+
+export function BotonCrear(props) {
+  return (
     <div>
-      <button className="btn-cancelar" onClick={props.onClick}>
+      <button className="btn-crear" onClick={props.onClick}>
         {props.texto}
       </button>
     </div>

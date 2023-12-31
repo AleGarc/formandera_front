@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/Horario.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import { BotonPeticion, BotonCancelar } from "./Botones";
+import { BotonPeticion, BotonCancelar, BotonCrear } from "./Botones";
 import Alert from "react-bootstrap/Alert";
 import Alerta from "./Alerta";
+import Accordion from "react-bootstrap/Accordion";
+import { FormularioTurno } from "./Formularios";
 
 const Horario = () => {
   const asignaturas = [
@@ -36,8 +38,9 @@ const Horario = () => {
       const newTurno = {
         day: diasSemana[i % 7],
         asignatura: asignaturas[i % 7],
-        horaInicio: "08:00",
-        horaFin: "09:00",
+        horaInicio: `${i % 24}:00`,
+        horaFin: `${(i + 1) % 24}:00`,
+        alumnosMax: 1 + (i % 7),
       };
 
       turnos.push(newTurno);
@@ -46,12 +49,8 @@ const Horario = () => {
   }
 
   const [diaSeleccionado, setDiaSeleccionado] = useState(null);
-  const [formData, setFormData] = useState({
-    asignatura: "",
-    horaInicio: "",
-    horaFin: "",
-  });
-  const [turnos, setTurnos] = useState(basurilla());
+
+  const [turnos, setTurnos] = useState([]);
   const [isCreandoTurno, setCreandoTurno] = useState(false);
 
   const manejarCancelar = () => {
@@ -61,25 +60,55 @@ const Horario = () => {
 
   const manejarDayButtonClick = (day) => {
     setDiaSeleccionado(day);
-    setFormData({ asignatura: "", horaInicio: "", horaFin: "" });
     setCreandoTurno(true);
   };
 
-  const manejarFormSubmit = (e) => {
-    e.preventDefault();
+  function insertarEnOrden(turno) {
+    let i = 0;
+    let nuevosTurnos = turnos;
+    while (i < nuevosTurnos.length && turno.day > nuevosTurnos[i].day) {
+      i++;
+    }
+    while (
+      i < nuevosTurnos.length &&
+      turno.day === nuevosTurnos[i].day &&
+      turno.horaInicio > nuevosTurnos[i].horaInicio
+    ) {
+      i++;
+    }
+    nuevosTurnos.splice(i, 0, turno);
+    return nuevosTurnos;
+  }
 
-    if (formData.asignatura && formData.horaInicio && formData.horaFin) {
+  const manejarFormTurnos = (turno) => {
+    if (turno.asignatura && turno.horaInicio && turno.horaFin) {
       const newTurno = {
         day: diaSeleccionado,
-        asignatura: formData.asignatura,
-        horaInicio: formData.horaInicio,
-        horaFin: formData.horaFin,
+        asignatura: turno.asignatura,
+        horaInicio: turno.horaInicio,
+        horaFin: turno.horaFin,
+        alumnosMax: turno.alumnosMax,
       };
-
-      setTurnos([...turnos, newTurno]);
+      let nuevosTurnos = insertarEnOrden(newTurno);
+      setTurnos(nuevosTurnos);
       setDiaSeleccionado(null);
       setCreandoTurno(false);
     }
+  };
+
+  const checkOtrosTurnos = (horaInicio, horaFin) => {
+    let error = null;
+    turnos.forEach((turno) => {
+      if (turno.day === diaSeleccionado) {
+        if (
+          (horaInicio > turno.horaInicio && horaInicio < turno.horaFin) ||
+          (horaFin > turno.horaInicio && horaFin < turno.horaFin)
+        ) {
+          error = "El turno se solapa con otro ya existente.";
+        }
+      }
+    });
+    return error;
   };
 
   const manejarBorrarTurno = (index) => {
@@ -104,143 +133,173 @@ const Horario = () => {
     return datos;
   };
 
-  return (
-    <Container className="week-grid">
-      <Row>
-        <h1 style={{ paddingRight: "10px" }}>Horario</h1>
-        {diasSemana.map((day) => (
-          <Col className="mb-3">
-            <Container>
-              <Row>
-                <div key={day}>
-                  <Col sm={12}>
-                    <label>{day}</label>
-                  </Col>
-                  <Col sm={12}>
-                    {isCreandoTurno && diaSeleccionado === day && (
-                      <BotonCancelar
-                        texto={"Canelar"}
-                        onClick={manejarCancelar}></BotonCancelar>
-                    )}
-                    {!isCreandoTurno && (
-                      <button onClick={() => manejarDayButtonClick(day)}>
-                        Nuevo turno
-                      </button>
-                    )}
-                  </Col>
-                  <Col sm={12}>
-                    {diaSeleccionado === day && (
-                      <form onSubmit={manejarFormSubmit}>
-                        <label>
-                          Asignatura:
-                          <select
-                            value={formData.asignatura}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                asignatura: e.target.value,
-                              })
-                            }>
-                            <option value="">Selecciona una asignatura</option>
-                            {asignaturas.map((asignatura) => (
-                              <option key={asignatura} value={asignatura}>
-                                {asignatura}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
-                        <br />
-                        <label>
-                          Hora de inicio:
-                          <input
-                            type="time"
-                            value={formData.horaInicio}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                horaInicio: e.target.value,
-                              })
-                            }
-                          />
-                        </label>
-                        <br />
-                        <label>
-                          Hora de fin:
-                          <input
-                            type="time"
-                            value={formData.horaFin}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                horaFin: e.target.value,
-                              })
-                            }
-                          />
-                        </label>
-                        <br />
-                        <button type="submit">Crear turno</button>
-                      </form>
-                    )}
+  //Puesto que el horario contiene siete columnas no es divisible
+  // por el sistema de breakpoints de bootstrap. Se obtendrá
+  // el ancho de la pantalla para establecer el número de columnas.
+  const [anchoPantalla, setAnchoPantalla] = useState(window.innerWidth);
 
-                    {turnos.map(
-                      (card, index) =>
-                        card.day === day && (
-                          <div key={index} className="card">
-                            <div className="mb-3">
-                              <label
-                                style={{
-                                  fontWeight: "bold",
-                                  paddingRight: "5px",
-                                }}>
-                                Asignatura:
-                              </label>
-                              <label>{card.asignatura}</label>
-                              <div>
-                                <label
-                                  style={{
-                                    fontWeight: "bold",
-                                    paddingRight: "5px",
-                                  }}>
-                                  Hora de inicio:
-                                </label>
-                                <label>{card.horaInicio}</label>
-                              </div>
-                              <div>
-                                <label
-                                  style={{
-                                    fontWeight: "bold",
-                                    paddingRight: "5px",
-                                  }}>
-                                  Hora de fin:
-                                </label>
-                                <label>{card.horaFin}</label>
-                              </div>
-                            </div>
-                            <button onClick={() => manejarBorrarTurno(index)}>
-                              Eliminar
-                            </button>
-                          </div>
-                        )
+  //Punto apartir del cual se establecerá el número de columnas.
+  // Este valor es empírico.
+  const breakpoint = 1620;
+
+  // Función para obtener y actualizar el ancho de la pantalla.
+  useEffect(() => {
+    const actualizarAnchoPantalla = () => {
+      setAnchoPantalla(window.innerWidth);
+    };
+
+    window.addEventListener("resize", actualizarAnchoPantalla);
+
+    // Limpieza del event listener cuando el componente se desmonta.
+    return () => {
+      window.removeEventListener("resize", actualizarAnchoPantalla);
+    };
+  }, []);
+
+  return (
+    <div className="week-grid">
+      <Container fluid style={{ width: "90%" }}>
+        <Row>
+          <div
+            id="divisor-titulo-horario"
+            className="mb-3"
+            style={{ display: "flex", justifyContent: "center" }}>
+            <h1>Horario</h1>
+          </div>
+          {diasSemana.map((day) => (
+            <Col
+              sm={anchoPantalla < breakpoint ? 12 : 0}
+              md={anchoPantalla < breakpoint ? 6 : 0}
+              lg={anchoPantalla < breakpoint ? 4 : 0}
+              xl={anchoPantalla < breakpoint ? 4 : 0}
+              xxl={anchoPantalla < breakpoint ? 3 : 0}
+              className="mb-3 columna-dia">
+              <Container>
+                <div id="divisor-dia" className="pb-3" key={day}>
+                  <div
+                    id="divisor-etiqueta-dia"
+                    style={{ display: "flex", justifyContent: "center" }}
+                    className="mb-3 mt-3 etiqueta-dia">
+                    <label>{day}</label>
+                  </div>
+
+                  <div
+                    id="divisor-boton-crear-turno"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}>
+                    {!isCreandoTurno && (
+                      <div style={{ width: "100%" }}>
+                        <BotonCrear
+                          texto={"Nuevo turno"}
+                          onClick={() =>
+                            manejarDayButtonClick(day)
+                          }></BotonCrear>
+                      </div>
                     )}
-                  </Col>
+                  </div>
+
+                  {diaSeleccionado === day && (
+                    <FormularioTurno
+                      manejarForm={manejarFormTurnos}
+                      checkOtrosTurnos={checkOtrosTurnos}></FormularioTurno>
+                  )}
+                  {isCreandoTurno && diaSeleccionado === day && (
+                    <div className="mt-2 mb-5">
+                      <BotonCancelar
+                        texto={"Cancelar"}
+                        onClick={manejarCancelar}></BotonCancelar>
+                    </div>
+                  )}
+
+                  {turnos.map(
+                    (turno, index) =>
+                      turno.day === day && (
+                        <Accordion>
+                          <Accordion.Item eventKey="0">
+                            <Accordion.Header>
+                              {turno.horaInicio} - {turno.horaFin}
+                            </Accordion.Header>
+                            <Accordion.Body>
+                              <div key={index} className="turno">
+                                <div className="mb-3">
+                                  <label
+                                    style={{
+                                      fontWeight: "bold",
+                                      paddingRight: "5px",
+                                    }}>
+                                    Asignatura:
+                                  </label>
+                                  <label>{turno.asignatura}</label>
+                                  <div>
+                                    <label
+                                      style={{
+                                        fontWeight: "bold",
+                                        paddingRight: "5px",
+                                      }}>
+                                      Hora de inicio:
+                                    </label>
+                                    <label>{turno.horaInicio}</label>
+                                  </div>
+                                  <div>
+                                    <label
+                                      style={{
+                                        fontWeight: "bold",
+                                        paddingRight: "5px",
+                                      }}>
+                                      Hora de fin:
+                                    </label>
+                                    <label>{turno.horaFin}</label>
+                                  </div>
+                                  <div>
+                                    <label
+                                      style={{
+                                        fontWeight: "bold",
+                                        paddingRight: "5px",
+                                      }}>
+                                      Alúmnos máximos:
+                                    </label>
+                                    <label>{turno.alumnosMax}</label>
+                                  </div>
+                                </div>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                  }}>
+                                  <BotonCancelar
+                                    texto="Eliminar"
+                                    onClick={() =>
+                                      manejarBorrarTurno(index)
+                                    }></BotonCancelar>
+                                </div>
+                              </div>
+                            </Accordion.Body>
+                          </Accordion.Item>
+                        </Accordion>
+                      )
+                  )}
                 </div>
-              </Row>
-            </Container>
-          </Col>
-        ))}
-        <div style={{ display: "flex", justifyContent: "right" }}>
-          <BotonPeticion
-            texto="Crear horario"
-            onRespuesta={manejarRespuesta}
-            onClick={manejarDatos}></BotonPeticion>
-        </div>
-        {isRespuesta && (
-          <Alerta
-            tipo={isRespuesta.tipo}
-            mensaje={isRespuesta.mensaje}></Alerta>
-        )}
-      </Row>
-    </Container>
+              </Container>
+            </Col>
+          ))}
+          {isRespuesta && (
+            <Alerta
+              tipo={isRespuesta.tipo}
+              mensaje={isRespuesta.mensaje}></Alerta>
+          )}
+          {turnos.length !== 0 && (
+            <div style={{ display: "flex", justifyContent: "right" }}>
+              <BotonPeticion
+                texto="Crear horario"
+                onRespuesta={manejarRespuesta}
+                onClick={manejarDatos}></BotonPeticion>
+            </div>
+          )}
+        </Row>
+      </Container>
+    </div>
   );
 };
 
