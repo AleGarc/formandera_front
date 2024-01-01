@@ -1,60 +1,37 @@
 import { useState } from "react";
+import "../css/botones.css";
 
 export function BotonPeticion(props) {
   const [isCargando, setCargando] = useState(false);
 
   const handleClick = async () => {
-    const datos = props.onClick();
-
     setCargando(true);
-    try {
-      const respuesta = await fetch("http://localhost:3001/clases", {
-        method: "POST",
-        body: JSON.stringify(datos),
-        headers: { "Content-Type": "application/json" },
-      });
-      const texto = await respuesta.text();
-      console.log(texto);
-      props.onRespuesta("success", "Horario creado con éxito.");
-    } catch (error) {
-      props.onRespuesta(
-        "danger",
-        "Hubo un error durante su petición. Inténtelo de nuevo más tarde."
-      );
-      console.error(error);
-    } finally {
-      setCargando(false);
-    }
+    await props.onClick();
+    setCargando(false);
   };
 
   return (
-    <div>
-      <button
-        className="btn-peticion"
-        disabled={isCargando}
-        onClick={!isCargando ? handleClick : null}>
-        {isCargando ? "Procesando..." : `${props.texto}`}
-      </button>
-    </div>
+    <button
+      className={props.clase !== undefined ? props.clase : "btn-peticion"}
+      disabled={isCargando}
+      onClick={!isCargando ? handleClick : null}>
+      {isCargando ? "Procesando..." : `${props.texto}`}
+    </button>
   );
 }
 
 export function BotonCancelar(props) {
   return (
-    <div style={{ width: "100%" }}>
-      <button type="button" className="btn-cancelar" onClick={props.onClick}>
-        {props.texto}
-      </button>
-    </div>
+    <button type="button" className="btn-cancelar" onClick={props.onClick}>
+      {props.texto}
+    </button>
   );
 }
 
 export function BotonCrear(props) {
   return (
-    <div>
-      <button className="btn-crear" onClick={props.onClick}>
-        {props.texto}
-      </button>
-    </div>
+    <button className="btn-crear" onClick={props.onClick}>
+      {props.texto}
+    </button>
   );
 }

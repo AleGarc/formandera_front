@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import "../css/Horario.css";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "../css/horario.css";
+import "../css/fonts.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import { BotonPeticion, BotonCancelar, BotonCrear } from "./Botones";
-import Alert from "react-bootstrap/Alert";
 import Alerta from "./Alerta";
 import Accordion from "react-bootstrap/Accordion";
 import { FormularioTurno } from "./Formularios";
@@ -31,22 +29,6 @@ const Horario = () => {
     "Sábado",
     "Domingo",
   ];
-
-  function basurilla() {
-    let turnos = [];
-    for (let i = 0; i < 70; i++) {
-      const newTurno = {
-        day: diasSemana[i % 7],
-        asignatura: asignaturas[i % 7],
-        horaInicio: `${i % 24}:00`,
-        horaFin: `${(i + 1) % 24}:00`,
-        alumnosMax: 1 + (i % 7),
-      };
-
-      turnos.push(newTurno);
-    }
-    return turnos;
-  }
 
   const [diaSeleccionado, setDiaSeleccionado] = useState(null);
 
@@ -122,17 +104,6 @@ const Horario = () => {
     setRespuesta({ tipo, mensaje });
   };
 
-  const manejarDatos = () => {
-    let datos = {
-      nombre: "Horario 1",
-      descripcion: "Horario de prueba",
-      id_profesor: 1,
-      asignaturas: asignaturas,
-      turnos: turnos,
-    };
-    return datos;
-  };
-
   //Puesto que el horario contiene siete columnas no es divisible
   // por el sistema de breakpoints de bootstrap. Se obtendrá
   // el ancho de la pantalla para establecer el número de columnas.
@@ -156,6 +127,33 @@ const Horario = () => {
     };
   }, []);
 
+  const manejarPeticion = async () => {
+    let datos = {
+      nombre: "Horario 1",
+      descripcion: "Horario de prueba",
+      idProfesor: "1",
+      asignaturas: asignaturas,
+      turnos: turnos,
+    };
+    try {
+      const respuesta = await fetch("http://localhost:3001/clase", {
+        method: "POST",
+        body: JSON.stringify(datos),
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log("respuesta", respuesta.status);
+      if (respuesta.status === 201)
+        manejarRespuesta("success", "Horario creado con éxito.");
+      else manejarRespuesta("danger", "Hubo un error durante su petición.");
+    } catch (error) {
+      manejarRespuesta(
+        "danger",
+        "Hubo un error durante su petición. Inténtelo de nuevo más tarde."
+      );
+      console.error(error);
+    }
+  };
+
   return (
     <div className="week-grid">
       <Container fluid style={{ width: "90%" }}>
@@ -164,7 +162,7 @@ const Horario = () => {
             id="divisor-titulo-horario"
             className="mb-3"
             style={{ display: "flex", justifyContent: "center" }}>
-            <h1>Horario</h1>
+            <h1 className="titulo">Horario</h1>
           </div>
           {diasSemana.map((day) => (
             <Col
@@ -190,7 +188,7 @@ const Horario = () => {
                       justifyContent: "center",
                     }}>
                     {!isCreandoTurno && (
-                      <div style={{ width: "100%" }}>
+                      <div style={{ width: "100%" }} className="mb-3">
                         <BotonCrear
                           texto={"Nuevo turno"}
                           onClick={() =>
@@ -263,17 +261,12 @@ const Horario = () => {
                                     <label>{turno.alumnosMax}</label>
                                   </div>
                                 </div>
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                  }}>
-                                  <BotonCancelar
-                                    texto="Eliminar"
-                                    onClick={() =>
-                                      manejarBorrarTurno(index)
-                                    }></BotonCancelar>
-                                </div>
+
+                                <BotonCancelar
+                                  texto="Eliminar"
+                                  onClick={() =>
+                                    manejarBorrarTurno(index)
+                                  }></BotonCancelar>
                               </div>
                             </Accordion.Body>
                           </Accordion.Item>
@@ -290,11 +283,15 @@ const Horario = () => {
               mensaje={isRespuesta.mensaje}></Alerta>
           )}
           {turnos.length !== 0 && (
-            <div style={{ display: "flex", justifyContent: "right" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "right",
+                padding: "0px",
+              }}>
               <BotonPeticion
                 texto="Crear horario"
-                onRespuesta={manejarRespuesta}
-                onClick={manejarDatos}></BotonPeticion>
+                onClick={manejarPeticion}></BotonPeticion>
             </div>
           )}
         </Row>

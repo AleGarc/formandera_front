@@ -1,5 +1,11 @@
 import React, { useState } from "react";
 import Alerta from "./Alerta";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import "../css/formularioLogin.css";
+import { BotonCancelar, BotonCrear, BotonPeticion } from "./Botones";
+import logo from "../images/formandera-logo.webp";
 
 export const FormularioTurno = (props) => {
   const asignaturas = [
@@ -115,6 +121,136 @@ export const FormularioTurno = (props) => {
           Crear turno
         </button>
       </form>
+    </div>
+  );
+};
+
+export const FormularioLogin = (props) => {
+  const manejarCambio = () => {
+    props.onRegistrado(false);
+  };
+
+  return (
+    <div className="envoltorio">
+      <Container className="contenedor">
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <h1>Iniciar sesión</h1>
+        </div>
+        <div className="mt-3">
+          <div className="mb-3">
+            <label>Correo electrónico</label>
+            <input type="email" placeholder="Introduce tu correo electrónico" />
+            <label className="text-muted">
+              Nunca compartiremos tu correo electrónico.
+            </label>
+          </div>
+
+          <div className="mb-3">
+            <label>Contraseña</label>
+            <input type="password" placeholder="Contraseña" />
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}>
+            <BotonPeticion texto="Iniciar sesión" clase="btn-crear" />
+          </div>
+          <hr style={{ border: "1px solid #000" }}></hr>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+            className="mb-2">
+            <label>¿No tienes cuenta?</label>
+          </div>
+          <BotonCrear texto="Registrarse" onClick={manejarCambio}></BotonCrear>
+        </div>
+      </Container>
+    </div>
+  );
+};
+
+export const FormularioRegistro = (props) => {
+  const manejarCambio = () => {
+    props.onRegistrado(true);
+  };
+
+  return (
+    <div className="envoltorio">
+      <Container className="contenedor">
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <h1>Crear una nueva cuenta</h1>
+        </div>
+
+        <div className="contenedor-registro">
+          <img
+            src={logo}
+            alt="logo"
+            width={300}
+            height={300}
+            style={{ paddingTop: "30px" }}
+          />
+          <div className="separador"></div>
+          <div style={{ display: "flex" }}>
+            <div className="mt-3">
+              <div className="mb-3">
+                <label>Nombre</label>
+                <input type="text" placeholder="Introduce tu nombre completo" />
+              </div>
+
+              <div className="mb-3">
+                <label>Nombre de usuario</label>
+                <input
+                  type="text"
+                  placeholder="Introduce tu nombre de usuario"
+                />
+              </div>
+
+              <div className="mb-3">
+                <label>Correo electrónico</label>
+                <input
+                  type="email"
+                  placeholder="Introduce tu correo electrónico"
+                />
+                <label className="text-muted">
+                  Nunca compartiremos tu correo electrónico.
+                </label>
+              </div>
+
+              <div className="mb-3">
+                <label>Contraseña</label>
+                <input type="password" placeholder="Contraseña" />
+                <label className="text-muted">
+                  Debe tener al menos 8 caracteres.
+                </label>
+              </div>
+
+              <div className="mb-3">
+                <label>Repite contraseña</label>
+                <input
+                  type="password"
+                  placeholder="Introduce la misma contraseña"
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}>
+                <BotonPeticion texto="Registrarse" clase="btn-crear" />
+              </div>
+              <hr style={{ border: "1px solid #000" }}></hr>
+
+              <BotonCancelar
+                texto="Atrás"
+                onClick={manejarCambio}></BotonCancelar>
+            </div>
+          </div>
+        </div>
+      </Container>
     </div>
   );
 };

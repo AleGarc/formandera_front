@@ -42,74 +42,6 @@ input {
   margin: 0;
 }
 
-.btn-peticion {
-  background-color: rgb(35, 34, 47);
-  border-color: rgb(35, 34, 47);
-  color: white;
-  border-radius: 4px;
-  border-color: rgb(35, 34, 47);
-  transition-duration: 0.3s;
-  border: 0px;
-}
-
-.btn-peticion:hover,
-.btn-peticion:active,
-.btn-peticion:focus {
-  background-color: rgba(35, 34, 47, 0.759);
-  border-color: rgba(35, 34, 47, 0.759);
-}
-
-.btn-peticion:disabled {
-  background-color: rgba(35, 34, 47, 0.759);
-  border-color: rgba(35, 34, 47, 0.759);
-}
-
-.btn-crear {
-  width: 100%;
-  background-color: rgb(65, 65, 158);
-  border-color: rgb(65, 65, 158);
-  color: white;
-  border-radius: 4px;
-  border-color: rgb(65, 65, 158);
-  transition-duration: 0.3s;
-  border: 0px;
-}
-
-.btn-crear:hover,
-.btn-crear:active,
-.btn-crear:focus {
-  background-color: rgba(65, 65, 158, 0.759);
-  border-color: rgba(65, 65, 158, 0.759);
-}
-
-.btn-crear:disabled {
-  background-color: rgba(65, 65, 158, 0.759);
-  border-color: rgba(65, 65, 158, 0.759);
-}
-
-.btn-cancelar {
-  width: 100%;
-  background-color: rgb(162, 45, 69);
-  border-color: rgb(162, 45, 69);
-  color: white;
-  border-radius: 4px;
-  border-color: rgb(162, 45, 69);
-  transition-duration: 0.3s;
-  border: 0px;
-}
-
-.btn-cancelar:hover,
-.btn-cancelar:active,
-.btn-cancelar:focus {
-  background-color: rgba(162, 45, 69, 0.759);
-  border-color: rgba(162, 45, 69, 0.759);
-}
-
-.btn-cancelar:disabled {
-  background-color: rgba(162, 45, 69, 0.759);
-  border-color: rgba(162, 45, 69, 0.759);
-}
-
 .etiqueta-dia {
   border: 2px solid;
   border-radius: 5px;
@@ -135,4 +67,8 @@ input {
   border: 1px solid;
   border-radius: 5px;
   margin-top: 5px;
+}
+
+.titulo {
+  font-family: "Monserrat Alternates Regular";
 }

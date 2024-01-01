@@ -1,0 +1,31 @@
+.navbar {
+  background-color: rgb(35, 34, 47);
+  color: white;
+}
+.navbar-toggler {
+  background-color: white;
+}
+
+.navbar-brand {
+  font-family: "Monserrat Alternates Bold";
+  font-size: 25px;
+  color: white;
+}
+
+.btn-navegacion {
+  color: white;
+  font-size: 20px;
+  font-family: "Monserrat Alternates Regular";
+  text-decoration: none;
+}
+
+.navbar-brand:hover,
+.btn-navegacion:hover {
+  transition-duration: 0.3s;
+  color: white;
+  text-shadow: white 0px 0px 10px;
+}
+
+.logout {
+  margin-left: 35px;
+}

@@ -1,0 +1,65 @@
+.btn-peticion,
+.btn-crear,
+.btn-cancelar {
+  color: white;
+  border-radius: 4px;
+  transition-duration: 0.3s;
+  border: 0px;
+  margin: 0px;
+}
+
+.btn-peticion {
+  background-color: rgb(35, 34, 47);
+  border-color: rgb(35, 34, 47);
+  border-color: rgb(35, 34, 47);
+}
+
+.btn-peticion:hover,
+.btn-peticion:active,
+.btn-peticion:focus {
+  background-color: rgba(35, 34, 47, 0.759);
+  border-color: rgba(35, 34, 47, 0.759);
+}
+
+.btn-peticion:disabled {
+  background-color: rgba(35, 34, 47, 0.759);
+  border-color: rgba(35, 34, 47, 0.759);
+}
+
+.btn-crear {
+  width: 100%;
+  background-color: rgb(65, 65, 158);
+  border-color: rgb(65, 65, 158);
+  border-color: rgb(65, 65, 158);
+}
+
+.btn-crear:hover,
+.btn-crear:active,
+.btn-crear:focus {
+  background-color: rgba(65, 65, 158, 0.759);
+  border-color: rgba(65, 65, 158, 0.759);
+}
+
+.btn-crear:disabled {
+  background-color: rgba(65, 65, 158, 0.759);
+  border-color: rgba(65, 65, 158, 0.759);
+}
+
+.btn-cancelar {
+  width: 100%;
+  background-color: rgb(162, 45, 69);
+  border-color: rgb(162, 45, 69);
+  border-color: rgb(162, 45, 69);
+}
+
+.btn-cancelar:hover,
+.btn-cancelar:active,
+.btn-cancelar:focus {
+  background-color: rgba(162, 45, 69, 0.759);
+  border-color: rgba(162, 45, 69, 0.759);
+}
+
+.btn-cancelar:disabled {
+  background-color: rgba(162, 45, 69, 0.759);
+  border-color: rgba(162, 45, 69, 0.759);
+}

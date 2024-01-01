@@ -1,14 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import Horario from "./components/Horario";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Aplicacion from "./components/Aplicacion";
+import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Horario />
+    <Header />
+    <BrowserRouter>
+      <Aplicacion />
+    </BrowserRouter>
+    <Footer />
   </React.StrictMode>
 );
 

@@ -1,0 +1,56 @@
+.contenedor {
+  max-width: fit-content;
+  border: 2px solid;
+  border-color: rgb(35, 34, 47);
+  border-radius: 10px;
+  padding: 80px;
+  background-color: white;
+  justify-content: center;
+}
+.envoltorio {
+  padding-top: 150px;
+  background-image: linear-gradient(
+    to top,
+    rgba(35, 34, 47, 0.2),
+    rgba(35, 34, 47, 0.97)
+  );
+  background-image: url("../images/classroom.webp");
+  padding-bottom: 550px;
+}
+
+.contenedor-registro {
+  display: flex;
+  justify-content: space-around;
+
+  padding-top: 40px;
+}
+
+.separador {
+  width: 1px;
+  height: 700px;
+  background-color: black;
+
+  margin-left: 80px;
+  margin-right: 80px;
+}
+
+@media (max-width: 550px) {
+  .contenedor {
+    padding: 25px;
+  }
+  .envoltorio {
+    padding-top: 50px;
+    padding-bottom: 250px;
+  }
+}
+
+@media (max-width: 992px) {
+  .contenedor-registro {
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+  }
+  .separador {
+    display: none;
+  }
+}
