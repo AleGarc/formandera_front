@@ -7,7 +7,12 @@ function Footer() {
     <footer className="page-footer">
       <div className="container">
         <div className="row">
-          <div className="col-lg-4 col-md-4 col-sm-12">
+          <div
+            className="col-lg-4 col-md-4 col-sm-12 mb-3"
+            style={{
+              justifyItems: "center",
+              display: "grid",
+            }}>
             <h6 className="text-uppercase font-weight-bold links">
               Enlaces útiles
             </h6>
@@ -32,7 +37,12 @@ function Footer() {
               </a>
             </div>
           </div>
-          <div className="col-lg-4 col-md-4 col-sm-12">
+          <div
+            className="col-lg-4 col-md-4 col-sm-12 mb-3"
+            style={{
+              justifyItems: "center",
+              display: "grid",
+            }}>
             <h6 className="text-uppercase font-weight-bold links">
               Siguenos en las redes sociales
             </h6>
@@ -52,7 +62,12 @@ function Footer() {
               </a>
             </div>
           </div>
-          <div className="col-lg-4 col-md-4 col-sm-12">
+          <div
+            className="col-lg-4 col-md-4 col-sm-12 mb-3"
+            style={{
+              justifyItems: "center",
+              display: "grid",
+            }}>
             <h6 className="text-uppercase font-weight-bold links">Contacto</h6>
             <p className="links">
               Dirección: Calle Principal 123, Ciudad, País

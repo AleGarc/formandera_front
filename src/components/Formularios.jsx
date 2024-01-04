@@ -126,8 +126,22 @@ export const FormularioTurno = (props) => {
 };
 
 export const FormularioLogin = (props) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fallo, setFallo] = useState("");
+
   const manejarCambio = () => {
     props.onRegistrado(false);
+  };
+
+  const manejarSubmit = async () => {
+    if (email === "" || password === "") return;
+    setFallo("");
+    const datos = { email, password };
+    const resultado = await props.onSubmit(datos);
+    if (resultado !== "") {
+      setFallo(resultado);
+    }
   };
 
   return (
@@ -137,26 +151,47 @@ export const FormularioLogin = (props) => {
           <h1>Iniciar sesión</h1>
         </div>
         <div className="mt-3">
-          <div className="mb-3">
-            <label>Correo electrónico</label>
-            <input type="email" placeholder="Introduce tu correo electrónico" />
-            <label className="text-muted">
-              Nunca compartiremos tu correo electrónico.
-            </label>
-          </div>
-
-          <div className="mb-3">
-            <label>Contraseña</label>
-            <input type="password" placeholder="Contraseña" />
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
             }}>
-            <BotonPeticion texto="Iniciar sesión" clase="btn-crear" />
-          </div>
+            <div className="mb-3">
+              <label>Correo electrónico</label>
+              <input
+                type="email"
+                placeholder="Introduce tu correo electrónico"
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <label className="text-muted">
+                Nunca compartiremos tu correo electrónico.
+              </label>
+            </div>
+
+            <div className="mb-3">
+              <label>Contraseña</label>
+              <input
+                type="password"
+                placeholder="Contraseña"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div style={{ maxWidth: "310px" }}>
+              {!fallo == "" && <Alerta tipo="danger" mensaje={fallo}></Alerta>}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}>
+              <BotonPeticion
+                onClick={manejarSubmit}
+                texto="Iniciar sesión"
+                clase="btn-crear"
+              />
+            </div>
+          </form>
           <hr style={{ border: "1px solid #000" }}></hr>
           <div
             style={{
@@ -174,8 +209,38 @@ export const FormularioLogin = (props) => {
 };
 
 export const FormularioRegistro = (props) => {
+  const [nombre, setNombre] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password1, setPassword1] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [role, setRole] = useState("alumno");
+
+  const [fallo, setFallo] = useState("");
+
   const manejarCambio = () => {
     props.onRegistrado(true);
+  };
+
+  const manejarSubmit = async () => {
+    if (
+      nombre === "" ||
+      username === "" ||
+      email === "" ||
+      password1 === "" ||
+      password2 === ""
+    )
+      return;
+    if (password1 !== password2) {
+      setFallo("Las contraseñas no coinciden.");
+      return;
+    }
+
+    setFallo("");
+    const password = password1;
+    const datos = { nombre, username, email, password, role };
+    const resolucion = await props.onSubmit(datos);
+    setFallo(resolucion);
   };
 
   return (
@@ -196,52 +261,101 @@ export const FormularioRegistro = (props) => {
           <div className="separador"></div>
           <div style={{ display: "flex" }}>
             <div className="mt-3">
-              <div className="mb-3">
-                <label>Nombre</label>
-                <input type="text" placeholder="Introduce tu nombre completo" />
-              </div>
-
-              <div className="mb-3">
-                <label>Nombre de usuario</label>
-                <input
-                  type="text"
-                  placeholder="Introduce tu nombre de usuario"
-                />
-              </div>
-
-              <div className="mb-3">
-                <label>Correo electrónico</label>
-                <input
-                  type="email"
-                  placeholder="Introduce tu correo electrónico"
-                />
-                <label className="text-muted">
-                  Nunca compartiremos tu correo electrónico.
-                </label>
-              </div>
-
-              <div className="mb-3">
-                <label>Contraseña</label>
-                <input type="password" placeholder="Contraseña" />
-                <label className="text-muted">
-                  Debe tener al menos 8 caracteres.
-                </label>
-              </div>
-
-              <div className="mb-3">
-                <label>Repite contraseña</label>
-                <input
-                  type="password"
-                  placeholder="Introduce la misma contraseña"
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
                 }}>
-                <BotonPeticion texto="Registrarse" clase="btn-crear" />
-              </div>
+                <div className="mb-3">
+                  <label>Nombre</label>
+                  <input
+                    type="text"
+                    placeholder="Introduce tu nombre completo"
+                    onChange={(e) => setNombre(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label>Nombre de usuario</label>
+                  <input
+                    type="text"
+                    placeholder="Introduce tu nombre de usuario"
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label>Correo electrónico</label>
+                  <input
+                    type="email"
+                    placeholder="Introduce tu correo electrónico"
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                  <label className="text-muted">
+                    Nunca compartiremos tu correo electrónico.
+                  </label>
+                </div>
+
+                <div
+                  className="mb-3"
+                  style={{ display: "flex", justifyContent: "space-around" }}>
+                  <label htmlFor={"checkbox"} style={{ paddingTop: "10px" }}>
+                    ¿Eres doncente?
+                  </label>
+
+                  <input
+                    id="checkbox"
+                    className="checkbox"
+                    type="checkbox"
+                    onChange={(e) => {
+                      e.target.checked == true
+                        ? setRole("docente")
+                        : setRole("alumno");
+                    }}
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label>Contraseña</label>
+                  <input
+                    type="password"
+                    placeholder="Contraseña"
+                    onChange={(e) => setPassword1(e.target.value)}
+                    required
+                  />
+                  <label className="text-muted">
+                    Debe tener al menos 8 caracteres.
+                  </label>
+                </div>
+
+                <div className="mb-3">
+                  <label>Repite contraseña</label>
+                  <input
+                    type="password"
+                    placeholder="Introduce la misma contraseña"
+                    onChange={(e) => setPassword2(e.target.value)}
+                    required
+                  />
+                </div>
+                <div style={{ maxWidth: "310px" }}>
+                  {!fallo == "" && (
+                    <Alerta tipo="danger" mensaje={fallo}></Alerta>
+                  )}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                  }}>
+                  <BotonPeticion
+                    texto="Registrarse"
+                    onClick={manejarSubmit}
+                    clase="btn-crear"
+                  />
+                </div>
+              </form>
               <hr style={{ border: "1px solid #000" }}></hr>
 
               <BotonCancelar

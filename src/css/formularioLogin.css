@@ -27,7 +27,7 @@
 
 .separador {
   width: 1px;
-  height: 700px;
+  height: 770px;
   background-color: black;
 
   margin-left: 80px;
@@ -53,4 +53,13 @@
   .separador {
     display: none;
   }
+}
+
+.checkbox {
+  height: 40px;
+  width: 40px;
+}
+
+.checkbox:checked {
+  accent-color: rgb(35, 34, 47);
 }
