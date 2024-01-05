@@ -1,7 +1,6 @@
 .week-grid {
   display: flex;
   justify-content: center;
-  margin: 20px;
 }
 
 button {
@@ -55,8 +54,8 @@ input {
 .columna-dia {
   border: 1px solid;
   border-radius: 10px;
-  border-color: rgb(35, 34, 47, 0.2);
-  background-color: rgb(35, 34, 47, 0.1);
+  border-color: rgb(35, 34, 47, 0.4);
+  background-color: rgba(65, 65, 158, 0.2);
 }
 
 .formularioTurno {
@@ -71,4 +70,16 @@ input {
 
 .titulo {
   font-family: "Monserrat Alternates Regular";
+}
+
+.turno {
+  background: linear-gradient(
+    360deg,
+    rgba(255, 255, 255, 1) 70%,
+    rgba(65, 65, 158, 0.2) 100%
+  );
+  border: 1px solid;
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.75);
+  padding: 10px;
 }

@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Alerta from "./Alerta";
 import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import "../css/formularioLogin.css";
 import { BotonCancelar, BotonCrear, BotonPeticion } from "./Botones";
 import logo from "../images/formandera-logo.webp";

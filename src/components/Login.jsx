@@ -45,6 +45,7 @@ const Login = () => {
     }
   };
 
+  //Comprobar que el username es único
   const manejarRegistro = async (datos) => {
     try {
       const respuesta = await fetch("http://localhost:3001/usuario", {
