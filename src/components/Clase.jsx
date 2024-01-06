@@ -33,7 +33,6 @@ const Clase = () => {
   if (!clase) return <p>Cargando...</p>;
   return (
     <div>
-      (
       <Container className={"mt-5 mb-5"}>
         <div>
           <h1>{clase.nombre}</h1>
@@ -100,9 +99,14 @@ const Clase = () => {
               </div>
             </Container>
           </Col>
-          {profesor !== undefined && (
+          {clase !== undefined && (
             <Col>
-              <HorarioClase turnos={clase.turnos} key={clase.id} />
+              <HorarioClase
+                turnos={clase.turnos}
+                key={clase.idPublico}
+                idClase={clase.idPublico}
+                idProfesor={clase.idProfesor}
+              />
             </Col>
           )}
         </Row>

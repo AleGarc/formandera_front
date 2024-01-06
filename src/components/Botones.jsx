@@ -49,14 +49,14 @@ export function BotonTurno(props) {
     Física: "rgba(0, 215, 60, 0.5)",
     Química: "rgba(0, 0, 255, 0.5)",
     Historia: "rgba(255, 255, 0, 0.5)",
-    Literatura: "rgba(128, 0, 128, 0.5)", // Púrpura
-    Inglés: "rgba(0, 128, 128, 0.5)", // Verde azulado
-    Arte: "rgba(255, 165, 0, 0.5)", // Naranja
-    Música: "rgba(255, 99, 71, 0.5)", // Rosa claro
-    Programación: "rgba(0, 128, 0, 0.5)", // Verde oscuro
-    Biología: "rgba(0,255,0,0.5)", // Rojo coral
+    Literatura: "rgba(128, 0, 128, 0.5)",
+    Inglés: "rgba(0, 128, 128, 0.5)",
+    Arte: "rgba(255, 165, 0, 0.5)",
+    Música: "rgba(255, 99, 71, 0.5)",
+    Programación: "rgba(0, 128, 0, 0.5)",
+    Biología: "rgba(0,255,0,0.5)",
     Geografía: "rgba(255,120,51,0.5)",
-    default: "rgba(65, 65, 158, 0.3)",
+    default: "rgba(65, 65, 158, 0.5)",
   };
 
   return (

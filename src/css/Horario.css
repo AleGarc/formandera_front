@@ -83,3 +83,30 @@ input {
   box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.75);
   padding: 10px;
 }
+
+.envoltorio-turno {
+  padding: 0px;
+  margin: 0px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 15px;
+}
+
+.select-formulario-modificar-turno {
+  width: 100%; /* Puedes ajustar el ancho según tus necesidades */
+  padding: 10px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #fff;
+  color: black;
+}
+
+.etiqueta-apuntado {
+  background-color: rgba(26, 223, 121, 0.7);
+  padding: 15px;
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.75);
+  border: 1px solid;
+  border-radius: 25px;
+}

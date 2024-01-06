@@ -4,22 +4,16 @@ import "../css/fonts.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import {
-  BotonPeticion,
-  BotonCancelar,
-  BotonCrear,
-  BotonTurno,
-} from "./Botones";
+import { BotonCrear, BotonTurno } from "./Botones";
 import Alerta from "./Alerta";
-import Accordion from "react-bootstrap/Accordion";
-import { FormularioTurno } from "./Formularios";
-
+import { FormularioModificarTurno } from "./Formularios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import Turno from "./Turno";
+import { checkOtrosTurnos } from "../javascript/validaciones";
 
 const HorarioClase = (props) => {
-  const turnos = props.turnos;
+  const [turnos, setTurnos] = useState(props.turnos);
 
   const diasSemana = [
     "Lunes",
@@ -31,11 +25,7 @@ const HorarioClase = (props) => {
     "Domingo",
   ];
 
-  /* const manejarBorrarTurno = (index) => {
-    const turnosActualizados = turnos.filter((_, i) => i !== index);
-    setTurnos(turnosActualizados);
-  }; */
-
+  //Para manejo de errores mostrando alerta.
   const [isRespuesta, setRespuesta] = useState(false);
 
   const manejarRespuesta = (tipo, mensaje) => {
@@ -65,53 +55,84 @@ const HorarioClase = (props) => {
     };
   }, []);
 
-  const manejarPeticion = async () => {
-    let datos = {
-      nombre: "Horario 1",
-      descripcion: "Horario de prueba",
-      idProfesor: "1",
-      asignaturas: [],
-      turnos: turnos,
-    };
-    try {
-      const respuesta = await fetch("http://localhost:3001/clase", {
-        method: "POST",
-        body: JSON.stringify(datos),
-        headers: { "Content-Type": "application/json" },
-      });
-      console.log("respuesta", respuesta.status);
-      if (respuesta.status === 201)
-        manejarRespuesta("success", "Horario creado con éxito.");
-      else manejarRespuesta("danger", "Hubo un error durante su petición.");
-    } catch (error) {
-      manejarRespuesta(
-        "danger",
-        "Hubo un error durante su petición. Inténtelo de nuevo más tarde."
-      );
-      console.error(error);
-    }
+  //Para lograr que el formulario de creación tenga el dia seleccionado.
+  const [diaSeleccionado, setDiaSeleccionado] = useState(undefined);
+  const manejarCreando = (dia) => {
+    setDiaSeleccionado(dia);
+    setCreando(true);
   };
 
+  //Para mostrar el turno seleccionado.
   const [turno, setTurno] = useState(undefined);
 
-  const manejarMostrarTurno = (turno) => {
-    setTurno(turno);
-  };
-
+  //Para obtener el token decodificado del usuario.
+  //Comprobamos si el usuario es el docente de la clase.
   const token = Cookies.get("token");
   let tokenDecodificado = undefined;
-  if (token) tokenDecodificado = jwtDecode(token);
+  let docenteDeClase = false;
+  if (token) {
+    tokenDecodificado = jwtDecode(token);
+    docenteDeClase =
+      props.idProfesor === tokenDecodificado.idPublico &&
+      tokenDecodificado.role === "docente";
+  }
+
+  //Para manejar la creación de un turno mostrando el panel de creación.
+  //Si se cancela la creación, recibe un null y se oculta el panel.
+  const [isCreando, setCreando] = useState(false);
+  const manejarCrearTurno = (data) => {
+    if (data === null) {
+      setCreando(false);
+      return;
+    }
+    setRespuesta(false);
+    //Comprobación de que no se solapan turnos.
+    const respuesta = checkOtrosTurnos(turnos, data);
+    if (respuesta != null) manejarRespuesta("danger", respuesta);
+    else {
+      fetch("http://localhost:3001/clase/" + props.idClase + "/turnos", {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          if (response.status === 400 || response.status === 404) {
+            manejarRespuesta(
+              "danger",
+              "Hubo un error durante su petición. Inténtelo de nuevo más tarde."
+            );
+            throw new Error("Error en la petición");
+          } else return response.json();
+        })
+        .then((data) => {
+          setTurnos(data.turnos);
+          setCreando(false);
+        })
+        .catch((error) => {
+          manejarRespuesta(
+            "danger",
+            "Hubo un error durante su petición. Inténtelo de nuevo más tarde."
+          );
+          console.error(error);
+        });
+    }
+  };
 
   return (
     <div className="week-grid">
       <Row style={{ width: "100%" }}>
+        {/*Titulo */}
         <div
           id="divisor-titulo-horario"
           className="mb-3"
           style={{ display: "flex", justifyContent: "center" }}>
           <h1 className="titulo">Horario</h1>
         </div>
-
+        {/* Generación de columnas para cada dia de la semana*/}
+        {/*Si se alcanza el breakpoint, el horario se dispone de forma responsive */}
         {diasSemana.map((day) => (
           <Col
             sm={anchoPantalla < breakpoint ? 12 : 0}
@@ -119,52 +140,75 @@ const HorarioClase = (props) => {
             lg={anchoPantalla < breakpoint ? 4 : 0}
             xl={anchoPantalla < breakpoint ? 4 : 0}
             xxl={anchoPantalla < breakpoint ? 3 : 0}
-            className="mb-3 columna-dia">
+            className="mb-3 columna-dia"
+            key={props.idClase + day}>
             <Container>
               <div id="divisor-dia" className="pb-3" key={day}>
                 <div
                   id="divisor-etiqueta-dia"
                   style={{ display: "flex", justifyContent: "center" }}
-                  className="mb-3 mt-3 etiqueta-dia">
+                  className="mt-3 etiqueta-dia">
                   <label>{day}</label>
                 </div>
-                <div
-                  id="divisor-boton-crear-turno"
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                  }}></div>
-
-                {turnos.map(
-                  (turno, index) =>
-                    turno.dia === day && (
-                      <BotonTurno
-                        texto={
-                          turno.asignatura
-                            ? `${turno.asignatura}: ${turno.horaInicio} - ${turno.horaFin}`
-                            : `Variado: ${turno.horaInicio} - ${turno.horaFin}`
-                        }
-                        asignatura={
-                          turno.asignatura ? turno.asignatura : "Variado"
-                        }
-                        key={turno.id + index}
-                        onClick={() => manejarMostrarTurno(turno)}
-                      />
-                    )
+                {/* Si se trata del docente de la clase se pueden crear nuevos turnos */}
+                {docenteDeClase && (
+                  <div
+                    id="divisor-boton-crear-turno"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}>
+                    <BotonCrear
+                      texto="Crear turno"
+                      onClick={() => manejarCreando(day)}
+                    />
+                  </div>
                 )}
+                {/*Se crean botones con información y disparador para cada turno */}
+                <div className="mt-3">
+                  {turnos.map(
+                    (turno, index) =>
+                      turno.dia === day && (
+                        <BotonTurno
+                          texto={`${turno.asignatura}: ${turno.horaInicio} - ${turno.horaFin}`}
+                          asignatura={
+                            turno.asignatura ? turno.asignatura : "Variado"
+                          }
+                          key={turno.idPublico + index}
+                          onClick={() => {
+                            setTurno(turno);
+                          }}
+                        />
+                      )
+                  )}
+                </div>
               </div>
             </Container>
           </Col>
         ))}
-        {/*         {isRespuesta && (
+        {/* La alerta que muestra los errores de las peticiones*/}
+        {isRespuesta && (
           <Alerta
             tipo={isRespuesta.tipo}
             mensaje={isRespuesta.mensaje}></Alerta>
-        )} */}
+        )}
+        {/*Si se pulsa crear turno se muestra el formulario asociado */}
+        {isCreando && (
+          <div className="turno mb-3">
+            <FormularioModificarTurno
+              turno={{ dia: diaSeleccionado }}
+              nuevo={true}
+              onCompletado={manejarCrearTurno}
+            />
+          </div>
+        )}
+        {/*Si se selecciona un turno se muestra su información */}
         {turno !== undefined && (
           <Turno
             turno={turno}
-            role={tokenDecodificado ? tokenDecodificado.role : "alumno"}
+            key={turno.idPublico}
+            idClase={props.idClase}
+            role={docenteDeClase ? "docente" : "alumno"}
             idUsuario={tokenDecodificado ? tokenDecodificado.idPublico : ""}
           />
         )}
