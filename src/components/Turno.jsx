@@ -264,17 +264,20 @@ const Turno = (props) => {
 
                   {/*Si está apuntado o no, mostrará cada botón*/}
                   <div>
-                    {apuntado ? (
+                    {apuntado && (
                       <BotonCancelar
                         texto="Desapuntarse"
                         onClick={() => manejarApuntado(false)}
                       />
-                    ) : (
-                      <BotonPeticion
-                        texto="Apuntarse"
-                        onClick={() => manejarApuntado(true)}
-                      />
                     )}
+                    {/*Si no queda espacio libre no se puede apuntar. */}
+                    {!apuntado &&
+                      turno.idAlumnos.length !== turno.alumnosMax && (
+                        <BotonPeticion
+                          texto="Apuntarse"
+                          onClick={() => manejarApuntado(true)}
+                        />
+                      )}
                   </div>
                 </div>
               )}
@@ -310,7 +313,9 @@ const Turno = (props) => {
                   </h3>
                   <hr></hr>
                   {asistentes.map((asistente) => (
-                    <div style={{ display: "flex", gap: "20px" }}>
+                    <div
+                      style={{ display: "flex", gap: "20px" }}
+                      key={asistente.idPublico}>
                       <div
                         className="contenedor-asistente"
                         key={asistente.idPublico}>

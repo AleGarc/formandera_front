@@ -7,6 +7,8 @@ import logo from "../images/formandera-logo.webp";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { checkHoras } from "../javascript/validaciones";
+import Form from "react-bootstrap/Form";
+import { MultiSelect } from "react-multi-select-component";
 
 export const FormularioTurno = (props) => {
   const asignaturas = [
@@ -370,6 +372,7 @@ export const FormularioRegistro = (props) => {
   );
 };
 
+//Formulario de creación y modificado de un turno
 export const FormularioModificarTurno = (props) => {
   //El mensaje de advertencia indica que la dependencia asignaturas en el
   //array de dependencias del useEffect cambia en cada renderizado, lo
@@ -395,9 +398,13 @@ export const FormularioModificarTurno = (props) => {
     []
   );
 
+  //Control de si se introduce una asignatura nueva. Cuando
+  //se selecciona la asignatura "Otro", se muestra un campo nuevo
   const [otraAsignatura, setOtraAsignatura] = useState("");
   const [mostrarOtraAsignatura, setMostrarOtraAsignatura] = useState(false);
 
+  //Efecto para establecimiento de la asignatura acorde al turno
+  //teniendo en cuenta el uso de la asignatura "Otro".
   useEffect(() => {
     if (props.turno.asignatura === undefined) {
       setAsignatura("Matemáticas");
@@ -412,6 +419,7 @@ export const FormularioModificarTurno = (props) => {
     setDia(props.turno.dia);
   }, [props.turno, asignaturas]);
 
+  //Estados para controlar los datos del turno
   const [asignatura, setAsignatura] = useState(
     props.turno.asignatura ?? "Matemáticas"
   );
@@ -419,8 +427,11 @@ export const FormularioModificarTurno = (props) => {
   const [horaInicio, setHoraInicio] = useState(props.turno.horaInicio ?? "");
   const [horaFin, setHoraFin] = useState(props.turno.horaFin ?? "");
   const [alumnosMax, setAlumnosMax] = useState(props.turno.alumnosMax ?? 1);
+
+  //Estado para controlar el mensaje de error
   const [errorModificacion, setErrorModificacion] = useState("");
 
+  //Función para controlar el cambio de asignatura
   const seleccionarAsignatura = (e) => {
     setAsignatura(e.target.value);
     if (e.target.value === "Otro") {
@@ -428,6 +439,8 @@ export const FormularioModificarTurno = (props) => {
     } else setMostrarOtraAsignatura(false);
   };
 
+  //Función para controlar el envío del formulario
+  //control de parámetros y llamada a la función de completado
   const manejarFormulario = () => {
     setErrorModificacion("");
     if (asignatura === "") {
@@ -468,6 +481,9 @@ export const FormularioModificarTurno = (props) => {
     }
 
     const alumnosMaximos = Number(alumnosMax);
+
+    //Comprobación de que la hora de inicio es anterior a la de fin y
+    //que hay una diferencia de al menos 30 minutos entre ambas.
     const resultado = checkHoras(horaInicio, horaFin);
     if (resultado !== null) {
       setErrorModificacion(resultado);
@@ -488,6 +504,7 @@ export const FormularioModificarTurno = (props) => {
     <Row>
       {props.nuevo === true ? <h3>Nuevo turno</h3> : <h3>Modificar turno</h3>}
       <hr />
+      {/* Selector de asignaturas */}
       <Col md={12} lg={6} className="mb-3">
         <label>Asignatura</label>
         <select
@@ -505,6 +522,7 @@ export const FormularioModificarTurno = (props) => {
           ))}
         </select>
       </Col>
+      {/* Selector de día */}
       <Col md={12} lg={6} className="mb-3">
         <label>Día</label>
         <select
@@ -520,6 +538,7 @@ export const FormularioModificarTurno = (props) => {
           <option value="Domingo">Domingo</option>
         </select>
       </Col>
+      {/* Campo para introducir una nueva asignatura*/}
       {mostrarOtraAsignatura && (
         <Col md={12} lg={6} className="mb-3">
           <label>Otra asignatura</label>
@@ -530,6 +549,7 @@ export const FormularioModificarTurno = (props) => {
           />
         </Col>
       )}
+      {/* Campo de hora de inicio */}
       <Col md={12} lg={6} className="mb-3">
         <label>Hora inicio</label>
         <input
@@ -538,6 +558,7 @@ export const FormularioModificarTurno = (props) => {
           onChange={(e) => setHoraInicio(e.target.value)}
         />
       </Col>
+      {/* Campo de hora de fin */}
       <Col md={12} lg={6} className="mb-3">
         <label>Hora fin</label>
         <input
@@ -546,6 +567,7 @@ export const FormularioModificarTurno = (props) => {
           onChange={(e) => setHoraFin(e.target.value)}
         />
       </Col>
+      {/* Campo de número de alumnos */}
       <Col md={12} lg={6} className="mb-3">
         <label>Alumnos máximos</label>
         <input
@@ -554,7 +576,7 @@ export const FormularioModificarTurno = (props) => {
           onChange={(e) => setAlumnosMax(e.target.value)}
         />
       </Col>
-
+      {/* Mostrado de alerta con el error de modificación / creación*/}
       <Col xs={12}>
         {errorModificacion && (
           <Alerta tipo="danger" mensaje={errorModificacion}></Alerta>
@@ -568,6 +590,319 @@ export const FormularioModificarTurno = (props) => {
           </div>
           <BotonPeticion
             texto={props.nuevo === true ? "Crear turno" : "Modificar turno"}
+            onClick={() => manejarFormulario()}
+          />
+        </div>
+      </Col>
+    </Row>
+  );
+};
+
+//Formulario para la modificación de la clase
+export const FormularioModificarClase = (props) => {
+  //Para la selección de asignaturas se utiliza un componente externo
+  //que permite la selección múltiple de asignaturas
+  //https://www.npmjs.com/package/react-multi-select-component
+
+  const asignaturasArray = [
+    { label: "Matemáticas", value: "Matemáticas" },
+    { label: "Física", value: "Física" },
+    { label: "Química", value: "Química" },
+    { label: "Historia", value: "Historia" },
+    { label: "Literatura", value: "Literatura" },
+    { label: "Inglés", value: "Inglés" },
+    { label: "Arte", value: "Arte" },
+    { label: "Música", value: "Música" },
+    { label: "Programación", value: "Programación" },
+    { label: "Biología", value: "Biología" },
+    { label: "Geografía", value: "Geografía" },
+  ];
+
+  //Mapeo de las asignaturas de la clase a etiquetas del selector
+
+  const transformarAsignaturaSelect = (asignaturas) => {
+    const asignaturasEstablecidas = asignaturas.map((asignatura) => {
+      return { label: asignatura, value: asignatura };
+    });
+    return asignaturasEstablecidas;
+  };
+
+  //Mapeo de las asignaturas seleccionadas en el selector a un array de strings
+
+  const transformarSelectAsignatura = (asignaturasSelect) => {
+    const asignaturasElegidas = asignaturasSelect.map((asignatura) => {
+      return asignatura.value;
+    });
+    return asignaturasElegidas;
+  };
+
+  //Estados para controlar los datos de la clase
+  const [nombre, setNombre] = useState(props.clase.nombre);
+  const [descripcion, setDescripcion] = useState(props.clase.descripcion);
+  const [precio, setPrecio] = useState(props.clase.precio);
+  const [ubicacion, setUbicacion] = useState(props.clase.ubicacion);
+  const [asignaturas, setAsignaturas] = useState(
+    transformarAsignaturaSelect(props.clase.asignaturas)
+  );
+
+  //Estado para controlar el mensaje de error
+  const [errorModificacion, setErrorModificacion] = useState("");
+
+  //Comprobación de parámetros y llamada a la función de completado
+  const manejarFormulario = () => {
+    setErrorModificacion("");
+    if (nombre === "") {
+      setErrorModificacion("El nombre no puede estar vacío.");
+      return;
+    }
+    if (descripcion === "") {
+      setErrorModificacion("La descripción no puede estar vacía.");
+      return;
+    }
+    if (precio === "") {
+      setErrorModificacion("El precio no puede estar vacío.");
+      return;
+    }
+    if (precio < 0) {
+      setErrorModificacion("El precio no puede ser negativo.");
+      return;
+    }
+    if (precio > 100) {
+      setErrorModificacion("El precio no puede ser mayor de 100€.");
+      return;
+    }
+
+    if (ubicacion === "") {
+      setErrorModificacion("La ubicación no puede estar vacía.");
+      return;
+    }
+    if (asignaturas.length === 0) {
+      setErrorModificacion("Las asignaturas no pueden estar vacías.");
+      return;
+    }
+
+    const precioNumero = Number(precio);
+
+    const data = {
+      nombre,
+      descripcion,
+      precio: precioNumero,
+      ubicacion,
+      asignaturas: transformarSelectAsignatura(asignaturas),
+    };
+
+    props.onCompletado(data);
+  };
+
+  //Función para crear una nueva asignatura en el selector
+  const manejarNuevaAsignatura = (asignatura) => ({
+    label: asignatura,
+    value: asignatura,
+  });
+  return (
+    <Row>
+      {props.nuevo === true ? <h3>Nuevo turno</h3> : <h3>Modificar turno</h3>}
+      <hr />
+      <Col md={12} lg={6} className="mb-3">
+        <label>Nombre</label>
+        <input
+          type="text"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+        />
+        <label>Descripción</label>
+        <Form.Control
+          style={{ border: "1px solid gray" }}
+          as="textarea"
+          rows={10}
+          value={descripcion}
+          onChange={(e) => setDescripcion(e.target.value)}
+        />
+      </Col>
+      {/* Selector de asignaturas*/}
+      <Col md={12} lg={6} className="mb-3">
+        <div className="mb-3">
+          <label>Asignaturas {"(Escribe para crear nueva)"}</label>
+          <MultiSelect
+            options={asignaturasArray}
+            value={asignaturas}
+            onChange={setAsignaturas}
+            labelledBy={"Select"}
+            isCreatable={true}
+            onCreateOption={manejarNuevaAsignatura}
+          />
+        </div>
+        <div className="mb-2">
+          <label>Precio €/h {"(Introduce cero para negociar el precio)"}</label>
+          <input
+            type="number"
+            value={precio}
+            onChange={(e) => setPrecio(e.target.value)}
+          />
+        </div>
+        <div className="mb-2">
+          <label>Ubicación</label>
+          <input
+            type="text"
+            value={ubicacion}
+            onChange={(e) => setUbicacion(e.target.value)}
+          />
+        </div>
+      </Col>
+
+      {/* Mostrado de alerta con error de modificación*/}
+      <Col xs={12}>
+        {errorModificacion && (
+          <Alerta tipo="danger" mensaje={errorModificacion}></Alerta>
+        )}
+        <div style={{ display: "flex", gap: "10px", justifyContent: "end" }}>
+          <div>
+            <BotonCancelar
+              texto="Cancelar"
+              onClick={() => props.onCompletado(null)}
+            />
+          </div>
+          <BotonPeticion
+            texto={props.nuevo === true ? "Crear turno" : "Modificar turno"}
+            onClick={() => manejarFormulario()}
+          />
+        </div>
+      </Col>
+    </Row>
+  );
+};
+
+//Formulario para la modificación y creación de un comentario
+export const FormularioComentario = (props) => {
+  //Estados para controlar los datos del comentario
+  const [nombre, setNombre] = useState(props.nombre);
+  const [calificacion, setCalificacion] = useState(
+    props.comentario ? props.comentario.calificacion : 0
+  );
+  const [mensaje, setMensaje] = useState(
+    props.comentario ? props.comentario.mensaje : ""
+  );
+
+  //Estado para controlar el mensaje de error
+  const [errorModificacion, setErrorModificacion] = useState("");
+
+  //Comprobación de parámetros y llamada a la función de completado
+  const manejarFormulario = () => {
+    setErrorModificacion("");
+    if (nombre === "") {
+      setErrorModificacion("El nombre no puede estar vacío.");
+      return;
+    }
+    if (mensaje === "") {
+      setErrorModificacion("El mensaje no puede estar vacío.");
+      return;
+    }
+    if (calificacion < 0 || calificacion > 5) {
+      setErrorModificacion("La calificación debe estar entre 0 y 5.");
+      return;
+    }
+
+    const data = {
+      nombre,
+      calificacion,
+      mensaje,
+    };
+
+    props.onCompletado(data);
+  };
+
+  //Función para controlar la anonimidad del comentario
+  const [isAnonimo, setIsAnonimo] = useState(false);
+
+  const manejarAnonimidad = () => {
+    if (isAnonimo) {
+      setIsAnonimo(false);
+      setNombre(props.nombre);
+    } else {
+      setIsAnonimo(true);
+      setNombre("Anónimo");
+    }
+  };
+
+  return (
+    <Row>
+      {props.nuevo === true ? (
+        <h3>Nuevo comentario</h3>
+      ) : (
+        <h3>Modificar comentario</h3>
+      )}
+      <hr />
+      {/* Si se selecciona ser anónimo, el input pasa a estar deshabilitado*/}
+      <Col md={12} lg={6} className="mb-3">
+        <label>Nombre</label>
+        <div
+          className="mb-2"
+          style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <input
+            type="text"
+            value={nombre}
+            style={{ marginBottom: "0px" }}
+            disabled={isAnonimo}
+            maxLength={100}
+            onChange={(e) => setNombre(e.target.value)}
+          />
+          <div style={{ display: "inline" }}>
+            <BotonCrear texto="Anónimo" onClick={() => manejarAnonimidad()} />
+          </div>
+        </div>
+        {/* Selección de calificación mediante un input range*/}
+        <div className="mb-2">
+          <label>Puntuación {calificacion}</label>
+          <div
+            style={{
+              display: "flex",
+              maxWidth: "300px",
+              gap: "10px",
+              alignItems: "center",
+            }}>
+            <label>0</label>
+            <input
+              type="range"
+              min={0}
+              max={5}
+              step={0.5}
+              value={calificacion}
+              style={{ marginBottom: "3px", accentColor: "rgb(35, 34, 47)" }}
+              onChange={(e) => setCalificacion(e.target.value)}
+            />
+            <label>5</label>
+          </div>
+        </div>
+      </Col>
+      {/*Mensaje del comentario */}
+      <Col md={12} lg={6} className="mb-3">
+        <label>Mensaje</label>
+        <Form.Control
+          style={{ border: "1px solid gray" }}
+          as="textarea"
+          rows={10}
+          value={mensaje}
+          maxLength={800}
+          onChange={(e) => setMensaje(e.target.value)}
+        />
+      </Col>
+
+      {/* Mostrado de alerta con error de modificación*/}
+      <Col xs={12}>
+        {errorModificacion && (
+          <Alerta tipo="danger" mensaje={errorModificacion}></Alerta>
+        )}
+        <div style={{ display: "flex", gap: "10px", justifyContent: "end" }}>
+          <div>
+            <BotonCancelar
+              texto="Cancelar"
+              onClick={() => props.onCompletado(null)}
+            />
+          </div>
+          <BotonPeticion
+            texto={
+              props.nuevo === true ? "Crear comentario" : "Modificar comentario"
+            }
             onClick={() => manejarFormulario()}
           />
         </div>
