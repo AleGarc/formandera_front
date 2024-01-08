@@ -6,7 +6,7 @@ import { BotonCancelar, BotonCrear, BotonPeticion } from "./Botones";
 import { useEffect, useState } from "react";
 import Alerta from "./Alerta";
 import Cookies from "js-cookie";
-import { FormularioModificarTurno } from "./Formularios";
+import FormularioModificarTurno from "./Formularios/FormularioModificarTurno";
 
 const Turno = (props) => {
   let turno = props.turno;
@@ -58,6 +58,25 @@ const Turno = (props) => {
     const turnoModificado = turno;
     turnoModificado.idAlumnos = idAlumnosRestantes;
 
+    //Expulsamos al alumno
+    fetch(
+      "http://localhost:3001/clase/" +
+        props.idClase +
+        "/turnos/" +
+        turnoModificado.idPublico +
+        "/alumnos/" +
+        idAlumno,
+      { method: "PATCH", headers: { Authorization: "Bearer " + token } }
+    )
+      .then((response) => {
+        if (response.status === 404) console.log("Alumno no encontrado");
+        else if (response.status === 400) {
+          console.log("El alumno no estaba apuntado");
+        } else return response.json();
+      })
+      .catch((error) => console.log(error));
+
+    //Actualizamos el turno
     fetch(
       "http://localhost:3001/clase/" +
         props.idClase +
@@ -85,6 +104,8 @@ const Turno = (props) => {
   const [errorAlerta, setErrorAlerta] = useState("");
 
   //Apuntado de un alumno en un turno, realizado por un alumno.
+  //Si se apunta o se desapunta, se actualizará el alumno
+  //para reflejar el estado de los turnos a los que está apuntado.
   const manejarApuntado = (_apuntarse) => {
     const idAlumno = props.idUsuario;
     const idClase = props.idClase;
@@ -114,11 +135,41 @@ const Turno = (props) => {
           //En el caso de que la petición sea correcta, se actualizan los asistentes
           if (_apuntarse) {
             turno.idAlumnos.push(idAlumno);
+            fetch("http://localhost:3001/usuario/" + idAlumno)
+              .then((res) => res.json())
+              .then((usuario) => {
+                usuario.turnos.push(turno.idPublico);
+                fetch("http://localhost:3001/usuario/" + idAlumno, {
+                  method: "PATCH",
+                  body: JSON.stringify(usuario),
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+                  },
+                }).catch((error) => console.log(error));
+              })
+              .catch((error) => console.log(error));
           } else {
             const idAlumnosRestantes = turno.idAlumnos.filter(
               (id) => id !== idAlumno
             );
             turno.idAlumnos = idAlumnosRestantes;
+            fetch("http://localhost:3001/usuario/" + idAlumno)
+              .then((res) => res.json())
+              .then((usuario) => {
+                usuario.turnos = usuario.turnos.filter(
+                  (id) => id !== turno.idPublico
+                );
+                fetch("http://localhost:3001/usuario/" + idAlumno, {
+                  method: "PATCH",
+                  body: JSON.stringify(usuario),
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+                  },
+                }).catch((error) => console.log(error));
+              })
+              .catch((error) => console.log(error));
           }
           setApuntado(_apuntarse);
         }

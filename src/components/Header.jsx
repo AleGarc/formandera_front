@@ -4,21 +4,20 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 function Header() {
   //const [cookie] = useCookies(["token"]);
 
   const home = "http://localhost:3000";
   const tokenCookie = Cookies.get("token");
+
   const [token, setToken] = useState();
   useEffect(() => {
     setToken(tokenCookie);
   }, [tokenCookie]);
 
-  const manejarLogout = () => {
-    Cookies.remove("token");
-    window.location.href = home;
-  };
+  const tokenDecodificado = token ? jwtDecode(token) : undefined;
 
   return (
     <Navbar collapseOnSelect expand="lg" className="navbar">
@@ -37,11 +36,10 @@ function Header() {
             </Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link className="btn-navegacion" href="#deets">
-              Sugerencias
-            </Nav.Link>
             {token !== undefined && (
-              <Nav.Link className="btn-navegacion" href="#deets">
+              <Nav.Link
+                className="btn-navegacion"
+                href={home + "/usuario/" + tokenDecodificado.idPublico}>
                 Perfil
               </Nav.Link>
             )}
@@ -49,7 +47,7 @@ function Header() {
               <Nav.Link
                 className="btn-navegacion logout"
                 eventKey={2}
-                onClick={manejarLogout}>
+                href={home + "/logout"}>
                 Cerrar sesión
               </Nav.Link>
             )}

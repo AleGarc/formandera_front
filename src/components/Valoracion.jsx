@@ -5,7 +5,7 @@ import { BsStarFill } from "react-icons/bs";
 import { BsStarHalf } from "react-icons/bs";
 import { BsStar } from "react-icons/bs";
 import { BotonCancelar, BotonCrear, BotonPeticion } from "./Botones";
-import { FormularioComentario } from "./Formularios";
+import FormularioComentario from "./Formularios/FormularioComentario";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
@@ -152,7 +152,31 @@ const Valoracion = ({ idClase }) => {
           setIsComentarios(true);
           //Se cierra el formulario
           setIsCreandoComentario(false);
+
+          // Se añade el comentario a la lista del usuario
+          fetch(
+            "http://localhost:3001/usuario/" +
+              tokenDecodificado.idPublico +
+              "/comentarios",
+            {
+              method: "POST",
+              body: JSON.stringify({ idComentario: idClase }),
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+            .then((res) => {
+              if (res.status === 404)
+                throw new Error("No se ha encontrado el usuario.");
+              else if (res.status === 409)
+                throw new Error("Ya has comentado esta clase.");
+              else return;
+            })
+            .catch((err) => console.log(err));
         })
+
         .catch((err) => console.log(err));
     }
   };
@@ -240,6 +264,20 @@ const Valoracion = ({ idClase }) => {
           setIsComentarios(false);
         }
         handleClose();
+
+        fetch(
+          "http://localhost:3001/usuario/" +
+            tokenDecodificado.idPublico +
+            "/comentarios/" +
+            idClase,
+          { method: "DELETE", headers: { Authorization: `Bearer ${token}` } }
+        )
+          .then((res) => {
+            if (res.status === 404)
+              throw new Error("No se ha encontrado el usuario.");
+            else return;
+          })
+          .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
   };

@@ -1,5 +1,5 @@
 import Container from "react-bootstrap/esm/Container";
-import { CartaClases } from "./Carta";
+
 import "../css/home.css";
 
 const Home = () => {
@@ -10,15 +10,7 @@ const Home = () => {
         <hr></hr>
       </div>
       <h3>Tus clases particulares</h3>
-      <div className="grid-container">
-        <CartaClases />
-        <CartaClases />
-        <CartaClases />
-        <CartaClases />
-        <CartaClases />
-        <CartaClases />
-        <CartaClases />
-      </div>
+      <div className="grid-container"></div>
     </Container>
   );
 };

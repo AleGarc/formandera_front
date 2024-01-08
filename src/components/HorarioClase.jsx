@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { BotonCrear, BotonTurno } from "./Botones";
 import Alerta from "./Alerta";
-import { FormularioModificarTurno } from "./Formularios";
+import FormularioModificarTurno from "./Formularios/FormularioModificarTurno";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import Turno from "./Turno";

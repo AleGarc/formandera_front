@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FormularioLogin, FormularioRegistro } from "./Formularios";
+import FormularioLogin from "./Formularios/FormularioLogin";
+import FormularioRegistro from "./Formularios/FormularioRegistro";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 

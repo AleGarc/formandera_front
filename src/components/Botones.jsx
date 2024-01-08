@@ -1,6 +1,10 @@
 import { useState } from "react";
 import "../css/botones.css";
 
+// Componente botones
+
+//El objetivo de este botón será mostrar el mensaje
+//"procesando..." mientras se realiza la petición
 export function BotonPeticion(props) {
   const [isCargando, setCargando] = useState(false);
 
@@ -36,6 +40,8 @@ export function BotonCrear(props) {
   );
 }
 
+//Botón para mostrar la información de un turno.
+//toma el color de la asignatura asociada.
 export function BotonTurno(props) {
   const manejarColor = (asignatura) => {
     if (color[asignatura]) {

@@ -9,7 +9,7 @@ import { BotonCancelar, BotonCrear, BotonPeticion } from "./Botones";
 import HorarioClase from "./HorarioClase";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import { FormularioModificarClase } from "./Formularios";
+import FormularioModificarClase from "./Formularios/FormularioModificarClase";
 import Alerta from "./Alerta";
 import Modal from "react-bootstrap/Modal";
 import Valoracion from "./Valoracion";
@@ -36,12 +36,12 @@ const Clase = () => {
       .then((response) => response.json())
       .then((data) => setProfesor(data))
       .catch((error) => console.error("Error fetching data:", error));
-  }, [idClase, errorClase]);
+  }, [idClase]);
 
   //Para manejar la redirección al perfil del docente.
   const manejarInfoDocente = () => {
     window.location.href =
-      "http://localhost:3000/docente/" + profesor.idPublico;
+      "http://localhost:3000/usuario/" + profesor.idPublico;
   };
 
   //Para obtener el token decodificado del usuario.
@@ -149,7 +149,9 @@ const Clase = () => {
   };
 
   //Confirmación por popup del borrado. Petición DELETE.
-  //Si la petición es correcta se redirige al home.
+  //Si la petición es correcta, se actualiza el docente
+  //para reflejar que ya no tiene la clase. Finalmente,
+  //se redirige al usuario a la página de inicio.
   const manejarBorradoConfirmado = () => {
     fetch("http://localhost:3001/clase/" + idClase, {
       method: "DELETE",
@@ -158,7 +160,21 @@ const Clase = () => {
       .then((response) => {
         if (response.status === 404) {
           throw new Error("Error en la petición");
-        } else window.location.href = "http://localhost:3000/home";
+        } else
+          fetch("http://localhost:3001/usuario/" + profesor.idPublico, {
+            method: "PATCH",
+            body: JSON.stringify({ clase: "" }),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }).then((response) => {
+            if (response.status === 404) {
+              throw new Error("Error en la petición");
+            } else if (response.status === 401) {
+              throw new Error("Error en la petición");
+            } else window.location.href = "http://localhost:3000/home";
+          });
       })
       .catch((error) => {
         setErrorBorrado({
@@ -254,7 +270,7 @@ const Clase = () => {
                 <label>{profesor.nombre}</label>
 
                 <div className="mt-2">
-                  <h5>Educación</h5>
+                  <h5>Formación</h5>
                   {/* Mostrado de educación con etiquetas */}
                   {profesor.educacion ? (
                     profesor.educacion.map((edu) => (

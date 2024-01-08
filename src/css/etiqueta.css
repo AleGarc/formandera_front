@@ -14,3 +14,17 @@
   border-radius: 50px;
   padding: 5px 10px 5px 10px;
 }
+
+.boton-eliminar-etiqueta {
+  padding: 3px;
+  font-size: 25px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid black;
+  color: white;
+  background: rgb(162, 45, 69);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -37,3 +37,17 @@ export const EtiquetaGalardones = (props) => {
     </div>
   );
 };
+
+export const EtiquetaGalardonesModificando = (props) => {
+  return (
+    <div className="etiqueta-galardones">
+      <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+        <label style={{ margin: "0px" }}>{props.texto}</label>
+
+        <button className="boton-eliminar-etiqueta" onClick={props.onClick}>
+          X
+        </button>
+      </div>
+    </div>
+  );
+};
