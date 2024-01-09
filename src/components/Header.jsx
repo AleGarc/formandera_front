@@ -5,11 +5,11 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import { NAV_KEY } from "../javascript/api";
 
 function Header() {
   //const [cookie] = useCookies(["token"]);
 
-  const home = "http://localhost:3000";
   const tokenCookie = Cookies.get("token");
 
   const [token, setToken] = useState();
@@ -22,41 +22,41 @@ function Header() {
   return (
     <Navbar collapseOnSelect expand="lg" className="navbar">
       <Container>
-        <Navbar.Brand className="navbar-brand" href={home}>
+        <Navbar.Brand className="navbar-brand" href={NAV_KEY}>
           Formandera
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link className="btn-navegacion" href={home}>
-              Buscar
+            <Nav.Link className="btn-navegacion" href={NAV_KEY + "/clases"}>
+              Clases
             </Nav.Link>
-            <Nav.Link className="btn-navegacion" href="#pricing">
-              Profesores
+            <Nav.Link className="btn-navegacion" href={NAV_KEY + "/docentes"}>
+              Docentes
             </Nav.Link>
           </Nav>
           <Nav>
             {token !== undefined && (
               <Nav.Link
                 className="btn-navegacion"
-                href={home + "/usuario/" + tokenDecodificado.idPublico}>
+                href={NAV_KEY + "/usuario/" + tokenDecodificado.idPublico}>
                 Perfil
               </Nav.Link>
             )}
             {token !== undefined && (
               <Nav.Link
-                className="btn-navegacion logout"
+                className="btn-navegacion"
                 eventKey={2}
-                href={home + "/logout"}>
+                href={NAV_KEY + "/logout"}>
                 Cerrar sesión
               </Nav.Link>
             )}
 
             {token === undefined && (
               <Nav.Link
-                className="btn-navegacion logout"
+                className="btn-navegacion"
                 eventKey={2}
-                href={home + "/login"}>
+                href={NAV_KEY + "/login"}>
                 Iniciar sesión
               </Nav.Link>
             )}

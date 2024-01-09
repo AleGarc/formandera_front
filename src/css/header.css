@@ -25,13 +25,3 @@
   color: white;
   text-shadow: white 0px 0px 10px;
 }
-
-.logout {
-  margin-left: 35px;
-}
-
-@media (max-width: 991px) {
-  .logout {
-    margin-left: 0px;
-  }
-}
