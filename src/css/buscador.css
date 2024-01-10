@@ -64,6 +64,7 @@
 .etiqueta-descripcion-docente {
   display: block;
   width: 95%;
+  height: 80px;
   overflow: hidden;
   white-space: pre;
   word-wrap: break-word;

@@ -8,8 +8,6 @@ import { jwtDecode } from "jwt-decode";
 import { NAV_KEY } from "../javascript/api";
 
 function Header() {
-  //const [cookie] = useCookies(["token"]);
-
   const tokenCookie = Cookies.get("token");
 
   const [token, setToken] = useState();
@@ -22,7 +20,9 @@ function Header() {
   return (
     <Navbar collapseOnSelect expand="lg" className="navbar">
       <Container>
-        <Navbar.Brand className="navbar-brand" href={NAV_KEY}>
+        <Navbar.Brand
+          className="navbar-brand"
+          href={tokenCookie ? NAV_KEY + "/home" : NAV_KEY}>
           Formandera
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />

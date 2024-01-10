@@ -1,36 +1,13 @@
 import { useEffect, useState } from "react";
 import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/esm/Row";
-import { BsStarFill } from "react-icons/bs";
-import { BsStarHalf } from "react-icons/bs";
-import { BsStar } from "react-icons/bs";
+import { valorEstrellas } from "../javascript/transformaciones";
 import { BotonCancelar, BotonCrear, BotonPeticion } from "./Botones";
 import FormularioComentario from "./Formularios/FormularioComentario";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
 import Modal from "react-bootstrap/Modal";
-
-//Conversión de valor numérico a representación por estrellas
-const valorEstrellas = (valor) => {
-  const estrellas = [];
-
-  // Redondear el valor a la mitad más cercana
-  const valorRedondeado = Math.round(valor * 2) / 2;
-
-  // Generar estrellas llenas, medias y vacías según el valor
-  for (let i = 1; i <= 5; i++) {
-    if (i <= valorRedondeado) {
-      estrellas.push(<BsStarFill key={i} className="estrella" />);
-    } else if (i - 0.5 === valorRedondeado) {
-      estrellas.push(<BsStarHalf key={i} className="estrella" />);
-    } else {
-      estrellas.push(<BsStar key={i} className="estrella" />);
-    }
-  }
-
-  return <div>{estrellas}</div>;
-};
 
 // Componente que representa una opinión
 const Opinion = ({

@@ -69,7 +69,6 @@ const FormularioRegistro = (props) => {
     }
 
     if (await validarUsernameUnico(username)) {
-      console.log("entra");
       setFallo("El nombre de usuario ya está registrado.");
       return;
     }
