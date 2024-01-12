@@ -47,27 +47,21 @@ const Login = () => {
   };
 
   //Comprobar que el username es único
-  const manejarRegistro = async (datos) => {
-    try {
-      const respuesta = await fetch("http://localhost:3001/usuario", {
-        method: "POST",
-        body: JSON.stringify(datos),
-        headers: { "Content-Type": "application/json" },
-      });
+  const manejarRegistro = (datos) => {
+    return fetch("http://localhost:3001/usuario", {
+      method: "POST",
+      body: JSON.stringify(datos),
+      headers: { "Content-Type": "application/json" },
+    }).then((respuesta) => {
       if (respuesta.status === 201) {
         const credenciales = {
           email: datos.email,
           password: datos.password,
         };
-        await manejarLogin(credenciales);
+        manejarLogin(credenciales);
         return "";
-      } else if (respuesta.status === 409)
-        return "El correo ya está registrado.";
-      else
-        return "Hubo un error durante su petición. Inténtelo de nuevo más tarde.";
-    } catch (error) {
-      return "Hubo un error durante su petición. Inténtelo de nuevo más tarde.";
-    }
+      } else return respuesta.json();
+    });
   };
 
   return (

@@ -155,12 +155,17 @@ const Perfil = () => {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((response) => {
+        .then(async (response) => {
           if (response.status === 404) {
             setErrorUsuarioModificacion("Error en la petición");
             throw new Error("Error en la petición");
           } else if (response.status === 401) {
             setErrorUsuarioModificacion("Error en la petición");
+            throw new Error("Error en la petición");
+          } else if (response.status === 409) {
+            const respuesta = await response.json();
+            console.log();
+            setErrorUsuarioModificacion(respuesta.message);
             throw new Error("Error en la petición");
           } else return response.json();
         })

@@ -176,7 +176,7 @@ const Buscador = () => {
           fetch(API_KEY + "/valoracion/" + clase.idPublico)
             .then((res) => res.json())
             .then((val) => {
-              clase.calificacion = val.calificacion;
+              clase.calificacion = val.puntuacion;
               clase.num_comentarios = val.comentarios.length;
             })
         );

@@ -23,38 +23,6 @@ function FormularioModificarUsuario({ usuario, onCompletado }) {
     return emailRegex.test(email);
   };
 
-  const validarUsernameUnico = async (username) => {
-    if (username === usernameUsuario) return false;
-    const respuesta = await fetch(
-      "http://localhost:3001/usuario/username/" + username
-    )
-      .then((res) => {
-        if (res.status === 200) return true;
-        else if (res.status === 404) return false;
-        else return false;
-      })
-      .catch((error) => {
-        return;
-      });
-    return respuesta;
-  };
-
-  const validarEmailUnico = async (email) => {
-    if (email === emailUsuario) return false;
-    const respuesta = await fetch(
-      "http://localhost:3001/usuario/email/" + email
-    )
-      .then((res) => {
-        if (res.status === 200) return true;
-        else if (res.status === 404) return false;
-        else return false;
-      })
-      .catch((error) => {
-        return;
-      });
-    return respuesta;
-  };
-
   //Comprobación de parámetros y llamada a la función de completado
   const manejarFormulario = async () => {
     setErrorModificacion("");
@@ -66,20 +34,13 @@ function FormularioModificarUsuario({ usuario, onCompletado }) {
       setErrorModificacion("El nombre de usuario no puede estar vacío.");
       return;
     }
-    if (await validarUsernameUnico(username)) {
-      setErrorModificacion("El nombre de usuario ya está en uso.");
-      return;
-    }
+
     if (email === "") {
       setErrorModificacion("El correo electrónico no puede estar vacío.");
       return;
     }
     if (!validarEmailRegex(email)) {
       setErrorModificacion("El correo electrónico no es válido. example@um.es");
-      return;
-    }
-    if (await validarEmailUnico(email)) {
-      setErrorModificacion("El correo electrónico ya está en uso.");
       return;
     }
 

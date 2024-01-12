@@ -313,7 +313,7 @@ const Valoracion = ({ idClase }) => {
               justifyContent: "end",
             }}>
             <div id="calificacion" className="calificacion">
-              {valoracion.calificacion.toFixed(2)} / 5
+              {valoracion.puntuacion.toFixed(2)} / 5
             </div>
             <div
               style={{
@@ -323,7 +323,7 @@ const Valoracion = ({ idClase }) => {
                 marginLeft: "10px",
               }}
               id="estrellas-calificacion">
-              {valorEstrellas(valoracion.calificacion)}
+              {valorEstrellas(valoracion.puntuacion)}
             </div>
           </Col>
         )}

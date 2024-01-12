@@ -18,41 +18,6 @@ const FormularioRegistro = (props) => {
     props.onRegistrado(true);
   };
 
-  const validarUsernameUnico = async (username) => {
-    const respuesta = await fetch(
-      "http://localhost:3001/usuario/username/" + username
-    )
-      .then((res) => {
-        if (res.status === 200) return true;
-        else if (res.status === 404) return false;
-        else return false;
-      })
-      .catch((error) => {
-        return;
-      });
-    return respuesta;
-  };
-
-  const validarEmailRegex = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validarEmailUnico = async (email) => {
-    const respuesta = await fetch(
-      "http://localhost:3001/usuario/email/" + email
-    )
-      .then((res) => {
-        if (res.status === 200) return true;
-        else if (res.status === 404) return false;
-        else return false;
-      })
-      .catch((error) => {
-        return;
-      });
-    return respuesta;
-  };
-
   const manejarSubmit = async () => {
     if (
       nombre === "" ||
@@ -65,20 +30,6 @@ const FormularioRegistro = (props) => {
 
     if (password1 !== password2) {
       setFallo("Las contraseñas no coinciden.");
-      return;
-    }
-
-    if (await validarUsernameUnico(username)) {
-      setFallo("El nombre de usuario ya está registrado.");
-      return;
-    }
-    if (!validarEmailRegex(email)) {
-      setFallo("El email no es válido. example@um.es");
-      return;
-    }
-
-    if (await validarEmailUnico(email)) {
-      setFallo("El email ya está registrado.");
       return;
     }
 
