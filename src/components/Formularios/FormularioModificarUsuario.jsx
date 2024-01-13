@@ -10,9 +10,7 @@ function FormularioModificarUsuario({ usuario, onCompletado }) {
   //Estados para controlar los datos del comentario
   const [nombre, setNombre] = useState(usuario.nombre);
   const [username, setUsername] = useState(usuario.username);
-  const [usernameUsuario] = useState(usuario.username);
   const [email, setEmail] = useState(usuario.email);
-  const [emailUsuario] = useState(usuario.email);
   const [biografia, setBiografia] = useState(usuario.biografia ?? "");
 
   //Estado para controlar el mensaje de error
