@@ -6,6 +6,7 @@ import { BotonCancelar, BotonCrear, BotonPeticion } from "./Botones";
 import FormularioComentario from "./Formularios/FormularioComentario";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import { API_KEY } from "../javascript/api";
 
 import Modal from "react-bootstrap/Modal";
 
@@ -77,7 +78,7 @@ const Valoracion = ({ idClase }) => {
   const [valoracion, setValoracion] = useState(null);
   const [isComentarios, setIsComentarios] = useState(false);
   useEffect(() => {
-    fetch("http://localhost:3001/valoracion/" + idClase)
+    fetch(API_KEY + "/valoracion/" + idClase)
       .then((res) => res.json())
       .then((res) => {
         setValoracion(res);
@@ -108,7 +109,7 @@ const Valoracion = ({ idClase }) => {
         calificacion: Number(data.calificacion),
         mensaje: data.mensaje,
       };
-      fetch("http://localhost:3001/valoracion/" + idClase + "/comentarios", {
+      fetch(API_KEY + "/valoracion/" + idClase + "/comentarios", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -132,7 +133,8 @@ const Valoracion = ({ idClase }) => {
 
           // Se añade el comentario a la lista del usuario
           fetch(
-            "http://localhost:3001/usuario/" +
+            API_KEY +
+              "/usuario/" +
               tokenDecodificado.idPublico +
               "/comentarios",
             {
@@ -179,7 +181,8 @@ const Valoracion = ({ idClase }) => {
       };
 
       fetch(
-        "http://localhost:3001/valoracion/" +
+        API_KEY +
+          "/valoracion/" +
           idClase +
           "/comentarios/" +
           tokenDecodificado.idPublico,
@@ -221,10 +224,7 @@ const Valoracion = ({ idClase }) => {
   //Función que se ejecuta cuando se confirma el borrado de un comentario
   const manejarBorradoConfirmado = () => {
     fetch(
-      "http://localhost:3001/valoracion/" +
-        idClase +
-        "/comentarios/" +
-        comentario.idAutor,
+      API_KEY + "/valoracion/" + idClase + "/comentarios/" + comentario.idAutor,
       { method: "DELETE", headers: { Authorization: `Bearer ${token}` } }
     )
       .then((res) => {
@@ -243,7 +243,8 @@ const Valoracion = ({ idClase }) => {
         handleClose();
 
         fetch(
-          "http://localhost:3001/usuario/" +
+          API_KEY +
+            "/usuario/" +
             tokenDecodificado.idPublico +
             "/comentarios/" +
             idClase,

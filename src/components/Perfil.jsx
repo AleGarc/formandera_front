@@ -15,6 +15,7 @@ import FormularioModificarClase from "./Formularios/FormularioModificarClase";
 import FormularioModificarUsuario from "./Formularios/FormularioModificarUsuario";
 import "../css/perfil.css";
 import { API_KEY } from "../javascript/api";
+import { NAV_KEY } from "../javascript/api";
 
 const Perfil = () => {
   const [usuario, setUsuario] = useState({});
@@ -75,7 +76,7 @@ const Perfil = () => {
         asignaturas: datos.asignaturas,
       };
 
-      fetch("http://localhost:3001/clase", {
+      fetch(API_KEY + "/clase", {
         method: "POST",
         body: JSON.stringify(clase),
         headers: {
@@ -99,7 +100,7 @@ const Perfil = () => {
           //para almacenar el id de la clase creada.
           const usuarioActualizado = usuario;
           usuarioActualizado.clase = datos.idPublico;
-          fetch("http://localhost:3001/usuario/" + usuario.idPublico, {
+          fetch(API_KEY + "/usuario/" + usuario.idPublico, {
             method: "PATCH",
             body: JSON.stringify(usuarioActualizado),
             headers: {
@@ -116,8 +117,7 @@ const Perfil = () => {
             })
             .then((user) => {
               //Una vez finalizado, se redirecciona a la página de la clase creada.
-              window.location.href =
-                "http://localhost:3000/clase/" + user.clase;
+              window.location.href = NAV_KEY + "/clase/" + user.clase;
             })
             .catch((error) => {
               console.error(error);
@@ -147,7 +147,7 @@ const Perfil = () => {
       setErrorUsuarioModificacion(false);
       return;
     } else {
-      fetch("http://localhost:3001/usuario/" + usuario.idPublico, {
+      fetch(API_KEY + "/usuario/" + usuario.idPublico, {
         method: "PATCH",
         body: JSON.stringify(datos),
         headers: {
@@ -184,14 +184,14 @@ const Perfil = () => {
   //Confirmación por popup del borrado. Petición DELETE.
   //Si la petición es correcta se redirige a la página de logout.
   const manejarBorradoConfirmado = () => {
-    fetch("http://localhost:3001/usuario/" + usuario.idPublico, {
+    fetch(API_KEY + "/usuario/" + usuario.idPublico, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => {
         if (response.status === 404) {
           throw new Error("Error en la petición");
-        } else window.location.href = "http://localhost:3000/logout";
+        } else window.location.href = NAV_KEY + "/logout";
       })
       .catch((error) => {
         console.error(error);
@@ -201,7 +201,7 @@ const Perfil = () => {
   //Función para manejar la redirección a la página de la clase del docente.
   const manejarVerClase = () => {
     if (usuario.role === "docente")
-      window.location.href = "http://localhost:3000/clase/" + usuario.clase;
+      window.location.href = NAV_KEY + "/clase/" + usuario.clase;
     else {
       setErrorUsuarioModificacion("No tienes una clase creada");
     }
@@ -235,7 +235,7 @@ const Perfil = () => {
     } else {
       setModificandoDocente(false);
       setModificandoAlumno(false);
-      fetch("http://localhost:3001/usuario/" + usuario.idPublico, {
+      fetch(API_KEY + "/usuario/" + usuario.idPublico, {
         method: "PATCH",
         body: JSON.stringify(datos),
         headers: {

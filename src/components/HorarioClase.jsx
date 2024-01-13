@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import Turno from "./Turno";
 import { checkOtrosTurnos } from "../javascript/validaciones";
+import { API_KEY } from "../javascript/api";
 
 const HorarioClase = (props) => {
   const [turnos, setTurnos] = useState(props.turnos);
@@ -90,7 +91,7 @@ const HorarioClase = (props) => {
     const respuesta = checkOtrosTurnos(turnos, data);
     if (respuesta != null) manejarRespuesta("danger", respuesta);
     else {
-      fetch("http://localhost:3001/clase/" + props.idClase + "/turnos", {
+      fetch(API_KEY + "/clase/" + props.idClase + "/turnos", {
         method: "PUT",
         body: JSON.stringify(data),
         headers: {

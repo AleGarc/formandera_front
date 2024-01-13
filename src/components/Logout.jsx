@@ -1,13 +1,14 @@
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import Container from "react-bootstrap/esm/Container";
+import { NAV_KEY } from "../javascript/api";
 
 //Componente sencillo para realizar el logout de la aplicación
 //Se elimina la cookie y se redirige a la página de inicio
 const Logout = () => {
   useEffect(() => {
     Cookies.remove("token");
-    window.location.href = "http://localhost:3000";
+    window.location.href = NAV_KEY + "";
   });
 
   return (

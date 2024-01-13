@@ -89,7 +89,7 @@ const Home = () => {
         asignaturas: datos.asignaturas,
       };
 
-      fetch("http://localhost:3001/clase", {
+      fetch(API_KEY + "/clase", {
         method: "POST",
         body: JSON.stringify(clase),
         headers: {
@@ -113,7 +113,7 @@ const Home = () => {
           //para almacenar el id de la clase creada.
           const usuarioActualizado = usuario;
           usuarioActualizado.clase = datos.idPublico;
-          fetch("http://localhost:3001/usuario/" + usuario.idPublico, {
+          fetch(API_KEY + "/usuario/" + usuario.idPublico, {
             method: "PATCH",
             body: JSON.stringify(usuarioActualizado),
             headers: {

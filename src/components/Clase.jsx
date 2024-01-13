@@ -13,6 +13,8 @@ import FormularioModificarClase from "./Formularios/FormularioModificarClase";
 import Alerta from "./Alerta";
 import Modal from "react-bootstrap/Modal";
 import Valoracion from "./Valoracion";
+import { API_KEY } from "../javascript/api";
+import { NAV_KEY } from "../javascript/api";
 
 const Clase = () => {
   const idClase = useParams().id;
@@ -22,7 +24,7 @@ const Clase = () => {
 
   //Efecto para obtener la clase y el profesor de la clase.
   useEffect(() => {
-    fetch("http://localhost:3001/clase/" + idClase)
+    fetch(API_KEY + "/clase/" + idClase)
       .then((response) => {
         if (response.status === 404) {
           setErrorClase(true);
@@ -31,7 +33,7 @@ const Clase = () => {
       })
       .then((data) => {
         setClase(data);
-        return fetch("http://localhost:3001/usuario/" + data.idProfesor);
+        return fetch(API_KEY + "/usuario/" + data.idProfesor);
       })
       .then((response) => response.json())
       .then((data) => setProfesor(data))
@@ -40,8 +42,7 @@ const Clase = () => {
 
   //Para manejar la redirección al perfil del docente.
   const manejarInfoDocente = () => {
-    window.location.href =
-      "http://localhost:3000/usuario/" + profesor.idPublico;
+    window.location.href = NAV_KEY + "/usuario/" + profesor.idPublico;
   };
 
   //Para obtener el token decodificado del usuario.
@@ -74,7 +75,7 @@ const Clase = () => {
       setModificando(false);
       return;
     } else {
-      fetch("http://localhost:3001/clase/" + idClase, {
+      fetch(API_KEY + "/clase/" + idClase, {
         method: "PATCH",
         body: JSON.stringify(datos),
         headers: {
@@ -125,9 +126,7 @@ const Clase = () => {
   const manejarBorrarClase = async () => {
     setErrorBorrado(false);
 
-    const claseRecuperada = await fetch(
-      "http://localhost:3001/clase/" + idClase
-    )
+    const claseRecuperada = await fetch(API_KEY + "/clase/" + idClase)
       .then((response) => response.json())
       .then((clase) => {
         return clase;
@@ -153,7 +152,7 @@ const Clase = () => {
   //para reflejar que ya no tiene la clase. Finalmente,
   //se redirige al usuario a la página de inicio.
   const manejarBorradoConfirmado = () => {
-    fetch("http://localhost:3001/clase/" + idClase, {
+    fetch(API_KEY + "/clase/" + idClase, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -161,7 +160,7 @@ const Clase = () => {
         if (response.status === 404) {
           throw new Error("Error en la petición");
         } else
-          fetch("http://localhost:3001/usuario/" + profesor.idPublico, {
+          fetch(API_KEY + "/usuario/" + profesor.idPublico, {
             method: "PATCH",
             body: JSON.stringify({ clase: "" }),
             headers: {
@@ -173,7 +172,7 @@ const Clase = () => {
               throw new Error("Error en la petición");
             } else if (response.status === 401) {
               throw new Error("Error en la petición");
-            } else window.location.href = "http://localhost:3000/home";
+            } else window.location.href = NAV_KEY + "/home";
           });
       })
       .catch((error) => {

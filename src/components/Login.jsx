@@ -3,6 +3,7 @@ import FormularioLogin from "./Formularios/FormularioLogin";
 import FormularioRegistro from "./Formularios/FormularioRegistro";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import { API_KEY } from "../javascript/api";
 
 const Login = () => {
   const [isRegistrado, setRegistrado] = useState(true);
@@ -13,7 +14,7 @@ const Login = () => {
 
   const manejarLogin = async (datos) => {
     try {
-      const respuesta = await fetch("http://localhost:3001/auth/login", {
+      const respuesta = await fetch(API_KEY + "/auth/login", {
         method: "POST",
         body: JSON.stringify(datos),
         headers: { "Content-Type": "application/json" },
@@ -48,7 +49,7 @@ const Login = () => {
 
   //Comprobar que el username es único
   const manejarRegistro = (datos) => {
-    return fetch("http://localhost:3001/usuario", {
+    return fetch(API_KEY + "/usuario", {
       method: "POST",
       body: JSON.stringify(datos),
       headers: { "Content-Type": "application/json" },

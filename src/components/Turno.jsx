@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Alerta from "./Alerta";
 import Cookies from "js-cookie";
 import FormularioModificarTurno from "./Formularios/FormularioModificarTurno";
+import { API_KEY } from "../javascript/api";
 
 const Turno = (props) => {
   let turno = props.turno;
@@ -27,9 +28,7 @@ const Turno = (props) => {
     setAsistentesError(false);
     const fetchAlumnoData = async (idAlumno) => {
       try {
-        const response = await fetch(
-          "http://localhost:3001/usuario/" + idAlumno
-        );
+        const response = await fetch(API_KEY + "/usuario/" + idAlumno);
 
         if (!response.ok) {
           throw new Error(`Error en la solicitud: ${response.statusText}`);
@@ -60,7 +59,8 @@ const Turno = (props) => {
 
     //Expulsamos al alumno
     fetch(
-      "http://localhost:3001/clase/" +
+      API_KEY +
+        "/clase/" +
         props.idClase +
         "/turnos/" +
         turnoModificado.idPublico +
@@ -78,7 +78,8 @@ const Turno = (props) => {
 
     //Actualizamos el turno
     fetch(
-      "http://localhost:3001/clase/" +
+      API_KEY +
+        "/clase/" +
         props.idClase +
         "/turnos/" +
         turnoModificado.idPublico,
@@ -114,17 +115,14 @@ const Turno = (props) => {
       apuntarse: _apuntarse,
     };
     setErrorAlerta("");
-    fetch(
-      "http://localhost:3001/clase/" + idClase + "/turnos/" + turno.idPublico,
-      {
-        method: "POST",
-        body: JSON.stringify(datos),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }
-    )
+    fetch(API_KEY + "/clase/" + idClase + "/turnos/" + turno.idPublico, {
+      method: "POST",
+      body: JSON.stringify(datos),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    })
       .then((response) => {
         if (response.status === 400) {
           //En el caso de recuperar un bad request, el alumno ya estaba apuntado.
@@ -135,11 +133,11 @@ const Turno = (props) => {
           //En el caso de que la petición sea correcta, se actualizan los asistentes
           if (_apuntarse) {
             turno.idAlumnos.push(idAlumno);
-            fetch("http://localhost:3001/usuario/" + idAlumno)
+            fetch(API_KEY + "/usuario/" + idAlumno)
               .then((res) => res.json())
               .then((usuario) => {
                 usuario.turnos.push(turno.idPublico);
-                fetch("http://localhost:3001/usuario/" + idAlumno, {
+                fetch(API_KEY + "/usuario/" + idAlumno, {
                   method: "PATCH",
                   body: JSON.stringify(usuario),
                   headers: {
@@ -154,13 +152,13 @@ const Turno = (props) => {
               (id) => id !== idAlumno
             );
             turno.idAlumnos = idAlumnosRestantes;
-            fetch("http://localhost:3001/usuario/" + idAlumno)
+            fetch(API_KEY + "/usuario/" + idAlumno)
               .then((res) => res.json())
               .then((usuario) => {
                 usuario.turnos = usuario.turnos.filter(
                   (id) => id !== turno.idPublico
                 );
-                fetch("http://localhost:3001/usuario/" + idAlumno, {
+                fetch(API_KEY + "/usuario/" + idAlumno, {
                   method: "PATCH",
                   body: JSON.stringify(usuario),
                   headers: {
@@ -189,7 +187,7 @@ const Turno = (props) => {
 
     if (datos === null) setModificando(false);
     else {
-      fetch("http://localhost:3001/clase/" + idClase + "/turnos/" + idTurno, {
+      fetch(API_KEY + "/clase/" + idClase + "/turnos/" + idTurno, {
         method: "PATCH",
         body: JSON.stringify(datos),
         headers: {
@@ -213,7 +211,7 @@ const Turno = (props) => {
   const manejarBorradoTurno = () => {
     const idClase = props.idClase;
     const idTurno = turno.idPublico;
-    fetch("http://localhost:3001/clase/" + idClase + "/turnos/" + idTurno, {
+    fetch(API_KEY + "/clase/" + idClase + "/turnos/" + idTurno, {
       method: "DELETE",
       headers: {
         Authorization: "Bearer " + token,
