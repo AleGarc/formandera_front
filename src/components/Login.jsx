@@ -24,14 +24,11 @@ const Login = () => {
         const tokenDecodificado = jwtDecode(objToken.access_token);
         const tiempoExpiracion = tokenDecodificado.exp - tokenDecodificado.iat;
 
-        // Obtén la zona horaria local del navegador en minutos
+        // Ajuste de la hora de expiracion por la zona horaria.
         const zonaHorariaLocal = new Date().getTimezoneOffset();
-
-        // Ajusta el tiempo de expiración según la zona horaria local
         const tiempoExpiracionAjustado =
           tiempoExpiracion - zonaHorariaLocal * 60;
 
-        // Crear una cookie utilizando el tiempo de expiración ajustado
         const fechaExpiracion = new Date(
           Date.now() + tiempoExpiracionAjustado * 1000
         );

@@ -1,0 +1,168 @@
+.titulo-formandera {
+  font-family: "Monserrat Alternates Bold";
+  font-size: 55px;
+  color: rgb(35, 34, 47);
+  text-align: center;
+  margin-top: 50px;
+}
+
+.subtitulo {
+  font-family: "Monserrat Alternates Regular";
+  font-size: 15px;
+  color: rgb(35, 34, 47);
+  text-align: center;
+}
+
+.contenedor-carrusel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.carrusel {
+  width: 70%;
+}
+
+.carrusel img {
+  width: 100%;
+  height: 100%;
+}
+
+.carrusel-caption {
+  background-color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  left: 0;
+  bottom: 10;
+  width: 100%;
+  color: white;
+  padding: 10px;
+}
+
+.buscar-clases {
+  border: 1px solid black;
+  box-shadow: 2px 2px 2px black;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(65, 65, 158, 0.3) 100%
+  );
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  width: 60%;
+}
+
+.titulo-seccion-formandera {
+  font-family: "Monserrat Alternates Regular";
+  font-size: 45px;
+  color: rgb(35, 34, 47);
+  text-align: center;
+  margin-top: 50px;
+}
+
+.seccion-texto {
+  word-break: break-word;
+  white-space: pre-line;
+  text-align: justify;
+  font-size: 25px;
+  width: 75%;
+  margin-bottom: 50px;
+}
+
+.contenedor-secciones {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.fondo {
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 1) 20%,
+    rgba(65, 65, 158, 0.1) 100%
+  );
+}
+
+.objetivo-formandera {
+  border: 2px dashed black;
+  border-radius: 30px;
+  background: linear-gradient(
+    235deg,
+    rgba(255, 255, 255, 1) 40%,
+    rgba(65, 65, 158, 0.3) 80%
+  );
+
+  padding: 10px;
+  box-shadow: 3px 3px 3px black;
+  display: flex;
+  gap: 10px;
+}
+
+.icono {
+  border: 2px solid black;
+  box-shadow: 2px 2px 2px black;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(65, 65, 158, 0.3) 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  width: 80px;
+  height: 80px;
+}
+
+.descripcion-objetivo {
+  margin-top: 25px;
+  padding: 10px;
+  word-break: break-word;
+  white-space: pre-line;
+  text-align: justify;
+  font-size: 18px;
+}
+
+@media (max-width: 991px) {
+  .titulo-formandera {
+    font-size: 40px;
+  }
+
+  .subtitulo {
+    font-size: 16px;
+  }
+
+  .carrusel {
+    width: 100%;
+  }
+
+  .buscar-clases {
+    width: 100%;
+  }
+
+  .seccion-texto {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .seccion-texto {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 450px) {
+  .carrusel-caption h3 {
+    font-size: 20px;
+  }
+
+  .carrusel-caption p {
+    display: none;
+  }
+}
